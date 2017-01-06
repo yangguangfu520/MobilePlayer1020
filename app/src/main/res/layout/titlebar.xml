@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.atguigu.mobileplayer1020.view.TitleBarView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="#ff3097fd"
@@ -55,4 +55,4 @@
         android:src="@drawable/ic_topbanner_record" />
 
 
-</LinearLayout>
+</com.atguigu.mobileplayer1020.view.TitleBarView>
