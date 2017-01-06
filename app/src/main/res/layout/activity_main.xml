@@ -8,11 +8,50 @@
     tools:context="com.atguigu.mobileplayer1020.MainActivity">
 
     <!--标题栏-线性布局-->
-    <include layout="@layout/titlebar"/>
+    <include layout="@layout/titlebar" />
 
 
     <!--中间内容-FrameLayout-->
+    <FrameLayout
+        android:id="@+id/fl_mainc_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <!--RadioGroup嵌套RadioButton-->
+    <RadioGroup
+        android:id="@+id/rg_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#11000000"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <RadioButton
+            android:id="@+id/rb_local_video"
+            style="@style/bottom_button_style"
+            android:drawableTop="@drawable/rb_local_video_selector"
+            android:text="本地视频" />
+
+        <RadioButton
+            android:id="@+id/rb_local_audio"
+            style="@style/bottom_button_style"
+            android:drawableTop="@drawable/rb_local_audio_selector"
+            android:text="本地音频" />
+
+
+        <RadioButton
+            android:id="@+id/rb_net_audio"
+            style="@style/bottom_button_style"
+            android:drawableTop="@drawable/rb_net_audio_selector"
+            android:text="网络音乐" />
+
+
+        <RadioButton
+            android:id="@+id/rb_net_video"
+            style="@style/bottom_button_style"
+            android:drawableTop="@drawable/rb_net_video_selector"
+            android:text="网络视频" />
+    </RadioGroup>
 
 </LinearLayout>
