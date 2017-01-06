@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         initFragment();
 
         //设置RadioGroup的监听
+
         initListenter();
 
     }
