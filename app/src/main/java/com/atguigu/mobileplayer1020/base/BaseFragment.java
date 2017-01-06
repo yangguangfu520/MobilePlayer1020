@@ -16,6 +16,9 @@ import android.view.ViewGroup;
  */
 public abstract class BaseFragment extends Fragment {
 
+    /**
+     * 上下文
+     */
     public Context mContext;
 
     /**
