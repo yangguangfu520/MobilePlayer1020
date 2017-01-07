@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         rg_main.check(R.id.rb_local_video);//onCheckedChanged
     }
 
+
+
+
     private void switchFragment(Fragment currentFragment) {
         if (tempFragment != currentFragment) {
 
