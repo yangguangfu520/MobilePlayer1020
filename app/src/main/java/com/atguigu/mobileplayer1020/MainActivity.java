@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.RadioGroup;
 
 import com.atguigu.mobileplayer1020.base.BaseFragment;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("TAG","onCreate");
         setContentView(R.layout.activity_main);
         rg_main = (RadioGroup) findViewById(R.id.rg_main);
 
@@ -124,5 +126,11 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(new NetAudioFragment());//网络音乐
         fragments.add(new NetVideoFragment());//网络视频
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("TAG","onDestroy");
     }
 }

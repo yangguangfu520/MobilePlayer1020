@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="singleTask"
 
             ></activity>
