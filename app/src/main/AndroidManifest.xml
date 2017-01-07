@@ -22,8 +22,13 @@
             android:name=".MainActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
             android:launchMode="singleTask" />
-        <activity android:name=".activity.SystemVideoPlayerActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"></activity>
+        <activity
+            android:name=".activity.SystemVideoPlayerActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+        <activity android:name=".activity.TestB"
+            android:theme="@android:style/Theme.Dialog"
+
+            ></activity>
     </application>
 
 </manifest>

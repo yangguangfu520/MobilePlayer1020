@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -12,6 +14,7 @@ import com.atguigu.mobileplayer1020.R;
 
 public class SystemVideoPlayerActivity extends Activity {
 
+    private static final String TAG = SystemVideoPlayerActivity.class.getSimpleName();//"SystemVideoPlayerActivity;
     private VideoView videoview;
 
     /**
@@ -22,6 +25,7 @@ public class SystemVideoPlayerActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG,"onCreate");
         setContentView(R.layout.activity_system_video_player);
         videoview = (VideoView) findViewById(R.id.videoview);
         getData();
@@ -29,6 +33,44 @@ public class SystemVideoPlayerActivity extends Activity {
         setLinstener();
         setData();
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG,"onRestart");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e(TAG,"onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG,"onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(TAG,"onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG,"onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG,"onDestroy");
+    }
+
+
 
     private void setData() {
         //设置播放地址
@@ -78,6 +120,17 @@ public class SystemVideoPlayerActivity extends Activity {
             videoview.start();
 
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction()==MotionEvent.ACTION_DOWN){
+//            Intent intent = new Intent(this,TestB.class);
+//            startActivity(intent);
+
+            return true;
+        }
+        return super.onTouchEvent(event);
     }
 
     /**
