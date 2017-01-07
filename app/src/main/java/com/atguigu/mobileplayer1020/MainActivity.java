@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         rg_main = (RadioGroup) findViewById(R.id.rg_main);
 
+        //Android6.0动态获取权限
         isGrantExternalRW(this);
 
         initFragment();
