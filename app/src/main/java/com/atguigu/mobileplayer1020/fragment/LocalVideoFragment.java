@@ -32,4 +32,15 @@ public class LocalVideoFragment extends BaseFragment {
         Log.e("TAG","本地视频数据初始化了。。");
         textView.setText("本地视频");
     }
+
+
+    @Override
+    public void onRefrshData() {
+        super.onRefrshData();
+        textView.setText("本地视频刷新");
+//        Log.e("TAG","onHiddenChanged。。"+this.toString());
+    }
+
+
+
 }

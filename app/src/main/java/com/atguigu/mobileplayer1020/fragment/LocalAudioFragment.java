@@ -32,4 +32,13 @@ public class LocalAudioFragment extends BaseFragment {
         Log.e("TAG","本地音频数据初始化了。。");
         textView.setText("本地音频");
     }
+
+
+
+    @Override
+    public void onRefrshData() {
+        super.onRefrshData();
+        textView.setText("本地音频刷新");
+//        Log.e("TAG","onHiddenChanged。。"+this.toString());
+    }
 }

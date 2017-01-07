@@ -19,6 +19,7 @@ public class WelcomeActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                //两秒后执行
                 startMainActivity();
             }
         }, 2000);
@@ -43,6 +44,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        //按下和离开
         startMainActivity();
         return super.onTouchEvent(event);
     }

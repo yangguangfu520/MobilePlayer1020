@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +45,11 @@ public abstract class BaseFragment extends Fragment {
         return initView();
     }
 
+
+
     /**
-     * 抽象方法，让孩子实现
+     * 抽象方法，让孩子实现-强制子类实现
+     *
      * @return
      */
     public abstract View initView() ;
@@ -71,4 +75,31 @@ public abstract class BaseFragment extends Fragment {
     public void initData() {
 
     }
+
+
+    /**
+     *
+     * @param hidden false：当前类显示
+     *               true:当前类隐藏
+     */
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.e("TAG","onHiddenChanged。。"+this.toString()+",hidden=="+hidden);
+        if(!hidden){
+            onRefrshData();
+        }
+
+    }
+
+
+
+    /**
+     * 当子类要刷新数据的时候重写该方法
+     */
+    public void onRefrshData() {
+
+    }
+
+
 }
