@@ -1,6 +1,7 @@
 package com.atguigu.mobileplayer1020.fragment;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -62,7 +64,27 @@ public class LocalVideoFragment extends BaseFragment {
         View view = View.inflate(mContext, R.layout.fragment_local_video, null);
         listview = (ListView) view.findViewById(R.id.listview);
         tv_no_media = (TextView) view.findViewById(R.id.tv_no_media);
+
+        //设置item的监听
+        listview.setOnItemClickListener(new MyOnItemClickListener());
         return view;
+    }
+
+    class MyOnItemClickListener implements AdapterView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> parent,View view, int position, long id) {
+            MediaItem mediaItem = mediaItems.get(position);
+//            Toast.makeText(mContext, "mediaItem=="+mediaItem.toString(), Toast.LENGTH_SHORT).show();
+            //
+            //1.调起系统的播放器播放视频--隐式意图
+            Intent intent = new Intent();
+            //第一参数：播放路径
+            //第二参数：路径对应的类型
+            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
+            startActivity(intent);
+
+        }
     }
 
     @Override

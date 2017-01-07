@@ -1,13 +1,16 @@
 package com.atguigu.mobileplayer1020.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.text.format.Formatter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
+import com.atguigu.mobileplayer1020.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -20,10 +23,12 @@ import java.util.ArrayList;
 public class LocalVideoAdapter extends BaseAdapter {
     private final Context mContext;
     private final ArrayList<MediaItem> datas;
+    private Utils utils;
 
     public LocalVideoAdapter(Context mContext, ArrayList<MediaItem> mediaItems) {
         this.mContext = mContext;
         this.datas = mediaItems;
+        utils = new Utils();
     }
 
     @Override
@@ -43,11 +48,37 @@ public class LocalVideoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView textView = new TextView(mContext);
-        textView.setTextSize(20);
-        textView.setTextColor(Color.BLACK);
-         MediaItem mediaItem =  datas.get(position);
-        textView.setText(mediaItem.toString());
-        return textView;
+        ViewHolder viewHolder;
+        if(convertView==null){
+            convertView = View.inflate(mContext, R.layout.item_local_video,null);
+            viewHolder = new ViewHolder();
+            viewHolder.iv_icon = (ImageView) convertView.findViewById(R.id.iv_icon);
+            viewHolder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+            viewHolder.tv_duration = (TextView) convertView.findViewById(R.id.tv_duration);
+            viewHolder.tv_size = (TextView) convertView.findViewById(R.id.tv_size);
+            //设置tag
+            convertView.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        //根据位置得到对应的数据
+        MediaItem mediaItem = datas.get(position);
+        viewHolder.tv_name.setText(mediaItem.getName());//设置名称
+        //设置文件大小
+        viewHolder.tv_size.setText(Formatter.formatFileSize(mContext,mediaItem.getSize()));
+        //设置时间
+        viewHolder.tv_duration.setText(utils.stringForTime((int) mediaItem.getDuration()));
+
+
+        return convertView;
+    }
+
+    static class ViewHolder{
+        TextView tv_name;
+        TextView tv_duration;
+        TextView tv_size;
+        ImageView iv_icon;
+
     }
 }
