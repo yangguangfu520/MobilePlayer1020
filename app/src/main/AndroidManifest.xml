@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.atguigu.mobileplayer1020">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -18,11 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:launchMode="singleTask"
-
-            ></activity>
+            android:launchMode="singleTask" />
+        <activity android:name=".activity.SystemVideoPlayerActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"></activity>
     </application>
 
 </manifest>
