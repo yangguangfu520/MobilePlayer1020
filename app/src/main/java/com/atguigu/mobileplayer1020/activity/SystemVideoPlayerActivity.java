@@ -22,9 +22,11 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.atguigu.mobileplayer1020.R;
+import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.utils.Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class SystemVideoPlayerActivity extends Activity implements View.OnClickListener {
@@ -54,6 +56,11 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     private Button btnSwichScreen;
     private Utils utils;
     private MyBroadcastReceiver receiver;
+    /**
+     * 列表数据
+     */
+    private ArrayList<MediaItem> mediaItems;
+    private int position;
 
     /**
      * Find the Views in the layout<br />
@@ -116,7 +123,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         IntentFilter filter = new IntentFilter();
         //监听电量变化
         filter.addAction(Intent.ACTION_BATTERY_CHANGED);
-        registerReceiver(receiver,filter);
+        registerReceiver(receiver, filter);
     }
 
     private Handler handler = new Handler() {
@@ -149,6 +156,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     /**
      * 得到系统的时间
+     *
      * @return
      */
     private String getSystemTime() {
@@ -156,12 +164,12 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         return format.format(new Date());
     }
 
-    class MyBroadcastReceiver extends BroadcastReceiver{
+    class MyBroadcastReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             //得到电量:0~100
-            int level = intent.getIntExtra("level",0);
+            int level = intent.getIntExtra("level", 0);
             //主线程
             setBattery(level);
         }
@@ -169,24 +177,25 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     /**
      * 设置电量
+     *
      * @param level
      */
     private void setBattery(int level) {
-        if(level <=0 ){
+        if (level <= 0) {
             ivBattery.setImageResource(R.drawable.ic_battery_0);
-        }else if(level<=10){
+        } else if (level <= 10) {
             ivBattery.setImageResource(R.drawable.ic_battery_10);
-        }else if(level<=20){
+        } else if (level <= 20) {
             ivBattery.setImageResource(R.drawable.ic_battery_20);
-        }else if(level<=40){
+        } else if (level <= 40) {
             ivBattery.setImageResource(R.drawable.ic_battery_40);
-        }else if(level<=60){
+        } else if (level <= 60) {
             ivBattery.setImageResource(R.drawable.ic_battery_60);
-        }else if(level<=80){
+        } else if (level <= 80) {
             ivBattery.setImageResource(R.drawable.ic_battery_80);
-        }else if(level<=100){
+        } else if (level <= 100) {
             ivBattery.setImageResource(R.drawable.ic_battery_100);
-        }else{
+        } else {
             ivBattery.setImageResource(R.drawable.ic_battery_100);
         }
 
@@ -264,7 +273,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     protected void onDestroy() {
         Log.e(TAG, "onDestroy");
         //是否资源-释放孩子的
-        if(receiver != null){
+        if (receiver != null) {
             unregisterReceiver(receiver);
             receiver = null;
         }
@@ -276,8 +285,18 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
 
     private void setData() {
-        //设置播放地址
-        videoview.setVideoURI(uri);
+
+        if(mediaItems != null && mediaItems.size() >0){
+            //根据位置获取播放视频的对象
+            MediaItem mediaItem = mediaItems.get(position);
+            videoview.setVideoPath(mediaItem.getData());
+            tvName.setText(mediaItem.getName());
+        }else if(uri != null){
+            //设置播放地址
+            videoview.setVideoURI(uri);
+            tvName.setText(uri.toString());
+        }
+
 
 
     }
@@ -397,6 +416,10 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
      * 得到播放地址
      */
     private void getData() {
+        //一个地址：从文件发起的单个播放请求
         uri = getIntent().getData();
+        //得到视频列表
+        mediaItems = (ArrayList<MediaItem>) getIntent().getSerializableExtra("videolist");
+        position = getIntent().getIntExtra("position",0);
     }
 }

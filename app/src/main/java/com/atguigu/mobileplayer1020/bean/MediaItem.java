@@ -1,12 +1,14 @@
 package com.atguigu.mobileplayer1020.bean;
 
+import java.io.Serializable;
+
 /**
  * 作者：尚硅谷-杨光福 on 2017/1/7 11:39
  * 微信：yangguangfu520
  * QQ号：541433511
  * 作用： 代码一个视频或者音频
  */
-public class MediaItem {
+public class MediaItem implements Serializable{
 
     String name ;
     long duration ;

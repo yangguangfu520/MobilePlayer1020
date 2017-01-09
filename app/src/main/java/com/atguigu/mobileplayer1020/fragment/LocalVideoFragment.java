@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -85,10 +86,20 @@ public class LocalVideoFragment extends BaseFragment {
 //            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
 //            startActivity(intent);
             //2.调起自定义播放器
+//            Intent intent = new Intent(mContext,SystemVideoPlayerActivity.class);
+//            //第一参数：播放路径
+//            //第二参数：路径对应的类型
+//            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");//一个播放地址
+//            startActivity(intent);
+            //3.传递列表数据
             Intent intent = new Intent(mContext,SystemVideoPlayerActivity.class);
-            //第一参数：播放路径
-            //第二参数：路径对应的类型
-            intent.setDataAndType(Uri.parse(mediaItem.getData()),"video/*");
+
+            Bundle bundle = new Bundle();
+            //列表数据
+            bundle.putSerializable("videolist",mediaItems);
+            intent.putExtras(bundle);
+            //传递点击的位置
+            intent.putExtra("position",position);
             startActivity(intent);
 
         }
