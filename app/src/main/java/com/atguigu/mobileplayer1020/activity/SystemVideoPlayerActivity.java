@@ -113,6 +113,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         //设置视频加载的监听
         setLinstener();
         setData();
+
     }
 
     private void initData() {
@@ -218,6 +219,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             finish();
         } else if (v == btnPre) {
             // Handle clicks for btnPre
+            setPreVideo();
         } else if (v == btnStartPause) {
             if (videoview.isPlaying()) {//是否在播放
                 //当前在播放要设置为暂停
@@ -233,10 +235,13 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             // Handle clicks for btnStartPause
         } else if (v == btnNext) {
             // Handle clicks for btnNext
+            setNextVideo();
         } else if (v == btnSwichScreen) {
             // Handle clicks for btnSwichScreen
         }
     }
+
+
 
 
     @Override
@@ -299,6 +304,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
 
 
+        checkButtonStatus();
+
     }
 
     private void setLinstener() {
@@ -359,10 +366,105 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     class MyOnCompletionListener implements MediaPlayer.OnCompletionListener {
 
         @Override
-        public void onCompletion(MediaPlayer mp) {            //1.单个视频-退出播放器
+        public void onCompletion(MediaPlayer mp) {
+            //1.单个视频-退出播放器
             //2.视频列表-播放下一个
-            Toast.makeText(SystemVideoPlayerActivity.this, "视频播放完成", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(SystemVideoPlayerActivity.this, "视频播放完成", Toast.LENGTH_SHORT).show();
+            setNextVideo();
         }
+    }
+
+    private void setPreVideo() {
+        //1.判断一下列表
+        if(mediaItems != null && mediaItems.size() >0){
+            position --;
+            if(position >= 0){
+                MediaItem mediaItem = mediaItems.get(position);
+                //设置标题
+                tvName.setText(mediaItem.getName());
+                //设置播放地址
+                videoview.setVideoPath(mediaItem.getData());
+                checkButtonStatus();
+
+            }else{
+                //越界
+                position = 0;
+            }
+        }
+
+
+    }
+
+    /**
+     * 设置播放下一个
+     */
+    private void setNextVideo() {
+        //1.判断一下列表
+        if(mediaItems != null && mediaItems.size() >0){
+            position ++;
+            if(position < mediaItems.size()){
+                MediaItem mediaItem = mediaItems.get(position);
+                //设置标题
+                tvName.setText(mediaItem.getName());
+                //设置播放地址
+                videoview.setVideoPath(mediaItem.getData());
+                checkButtonStatus();
+
+            }else{
+                //越界
+                position = mediaItems.size()-1;
+                finish();
+            }
+        }
+        //2. 单个的uri
+        else if(uri != null){
+            finish();
+        }
+
+
+    }
+
+    private void checkButtonStatus() {
+        //1.判断一下列表
+        if(mediaItems != null && mediaItems.size() >0){
+            //1.其他设置默认
+            setButtonEnable(true);
+
+            //2.播放第0个，上一个i设置灰色
+            if(position==0){
+                btnPre.setBackgroundResource(R.drawable.btn_pre_gray);
+                btnPre.setEnabled(false);
+            }
+            //3.播放最后一个设置，下一个按钮设置灰色
+            if(position ==mediaItems.size()-1){
+                btnNext.setBackgroundResource(R.drawable.btn_next_gray);
+                btnNext.setEnabled(false);
+            }
+
+        }
+        //2. 单个的uri
+        else if(uri != null){
+
+            //上一个和下一个都要设置灰色
+            setButtonEnable(false);
+        }
+    }
+
+    /***
+     * 设置按钮的可点状态
+     * @param isEnable
+     */
+    private void setButtonEnable(boolean isEnable){
+        if(isEnable){
+            btnPre.setBackgroundResource(R.drawable.btn_pre_selector);
+            btnNext.setBackgroundResource(R.drawable.btn_next_selector);
+
+        }else{
+            btnPre.setBackgroundResource(R.drawable.btn_pre_gray);
+            btnNext.setBackgroundResource(R.drawable.btn_next_gray);
+        }
+        btnPre.setEnabled(isEnable);
+        btnNext.setEnabled(isEnable);
     }
 
     class MyOnErrorListener implements MediaPlayer.OnErrorListener {
