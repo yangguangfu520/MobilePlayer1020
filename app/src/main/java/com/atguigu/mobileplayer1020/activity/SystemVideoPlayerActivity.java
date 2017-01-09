@@ -217,7 +217,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         } else if (v == btnExit) {
             // Handle clicks for btnExit
             finish();
-        } else if (v == btnPre) {
+        } else if (v == btnPre) {//上一个的点击事件
             // Handle clicks for btnPre
             setPreVideo();
         } else if (v == btnStartPause) {
@@ -233,7 +233,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 btnStartPause.setBackgroundResource(R.drawable.btn_pause_selector);
             }
             // Handle clicks for btnStartPause
-        } else if (v == btnNext) {
+        } else if (v == btnNext) {//下一个的点击事件
             // Handle clicks for btnNext
             setNextVideo();
         } else if (v == btnSwichScreen) {
@@ -337,6 +337,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
+                //响应用户拖动
                 videoview.seekTo(progress);
             }
 
@@ -384,6 +385,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 tvName.setText(mediaItem.getName());
                 //设置播放地址
                 videoview.setVideoPath(mediaItem.getData());
+                //校验按钮状态
                 checkButtonStatus();
 
             }else{
@@ -408,7 +410,12 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 tvName.setText(mediaItem.getName());
                 //设置播放地址
                 videoview.setVideoPath(mediaItem.getData());
+                //专题的校验
                 checkButtonStatus();
+                
+                if(position ==mediaItems.size()-1){
+                    Toast.makeText(this, "哥们播放最后一个视频了哦", Toast.LENGTH_SHORT).show();
+                }
 
             }else{
                 //越界
