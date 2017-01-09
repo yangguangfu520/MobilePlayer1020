@@ -9,7 +9,7 @@
     tools:context="com.atguigu.mobileplayer1020.activity.SystemVideoPlayerActivity">
 
 
-    <VideoView
+    <com.atguigu.mobileplayer1020.view.VideoView
         android:layout_centerInParent="true"
         android:id="@+id/videoview"
         android:layout_width="match_parent"
