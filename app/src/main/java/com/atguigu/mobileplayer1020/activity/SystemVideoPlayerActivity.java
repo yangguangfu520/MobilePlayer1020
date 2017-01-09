@@ -89,7 +89,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     private int screenWidth = 0;
     private int screeHeight = 0;
     private int videoWidth = 0;
-    private int videoHeight =0;
+    private int videoHeight = 0;
 
     /**
      * 音频管理者
@@ -105,7 +105,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     private int maxVolume;
 
     /**
-    是否静音
+     * 是否静音
      */
     private boolean isMute = false;
 
@@ -153,7 +153,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
         //和SeekBar关联
         seekbarVoice.setMax(maxVolume);
-        Log.e("TAG",maxVolume+"----------");
+        Log.e("TAG", maxVolume + "----------");
         seekbarVoice.setProgress(currentVolume);
 
     }
@@ -191,13 +191,12 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         detector = new GestureDetector(this, new MySimpleOnGestureListener());
 
 
-
         //得到屏幕的宽和高
-        DisplayMetrics outMetrics =new DisplayMetrics() ;
+        DisplayMetrics outMetrics = new DisplayMetrics();
         //得到屏幕参数类
         getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
         //屏幕的宽和高
-        screenWidth =outMetrics.widthPixels;
+        screenWidth = outMetrics.widthPixels;
         screeHeight = outMetrics.heightPixels;
 
     }
@@ -213,10 +212,10 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         @Override
         public boolean onDoubleTap(MotionEvent e) {
 //            Toast.makeText(SystemVideoPlayerActivity.this, "我被双击了", Toast.LENGTH_SHORT).show();
-            if(isFullScreen){
+            if (isFullScreen) {
                 //设置默认
                 setVideoType(VIDEO_TYPE_DEFAULT);
-            }else{
+            } else {
                 //全屏显示
                 setVideoType(VIDEO_TYPE_FULL);
             }
@@ -243,10 +242,10 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     }
 
     private void setVideoType(int videoTypeDefault) {
-        switch (videoTypeDefault){
+        switch (videoTypeDefault) {
             case VIDEO_TYPE_FULL:
                 isFullScreen = true;
-                videoview.setViewSize(screenWidth,screeHeight);
+                videoview.setViewSize(screenWidth, screeHeight);
 
                 //把按钮设置-默认
                 btnSwichScreen.setBackgroundResource(R.drawable.btn_screen_default_selector);
@@ -256,7 +255,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 isFullScreen = false;
 
                 //视频原始的画面大小
-                int  mVideoWidth = videoWidth;
+                int mVideoWidth = videoWidth;
                 int mVideoHeight = videoHeight;
 
                 /**
@@ -265,16 +264,16 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 int width = screenWidth;
                 int height = screeHeight;
 
-                if ( mVideoWidth * height  < width * mVideoHeight ) {
+                if (mVideoWidth * height < width * mVideoHeight) {
                     //Log.i("@@@", "image too wide, correcting");
                     width = height * mVideoWidth / mVideoHeight;
-                } else if ( mVideoWidth * height  > width * mVideoHeight ) {
+                } else if (mVideoWidth * height > width * mVideoHeight) {
                     //Log.i("@@@", "image too tall, correcting");
                     height = width * mVideoHeight / mVideoWidth;
                 }
 
                 //把计算好的视频大小传递过去
-                videoview.setViewSize(width,height);
+                videoview.setViewSize(width, height);
                 //把按钮设置-全屏
                 btnSwichScreen.setBackgroundResource(R.drawable.btn_screen_full_selector);
                 break;
@@ -408,10 +407,10 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             setNextVideo();
         } else if (v == btnSwichScreen) {
             // Handle clicks for btnSwichScreen
-            if(isFullScreen){
+            if (isFullScreen) {
                 //设置默认
                 setVideoType(VIDEO_TYPE_DEFAULT);
-            }else{
+            } else {
                 //全屏显示
                 setVideoType(VIDEO_TYPE_FULL);
             }
@@ -420,7 +419,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         //移除消息
         handler.removeMessages(HIDE_MEDIA_CONTROLLER);
         //重新发消息
-        handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER,4000);
+        handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER, 4000);
     }
 
     private void startAndPause() {
@@ -521,12 +520,12 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     }
 
-    class VoiceOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener{
+    class VoiceOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if(fromUser){
-                updateVoice(progress);
+            if (fromUser) {
+                updateVoiceProgress(progress);
             }
 
         }
@@ -549,20 +548,32 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
          */
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER,4000);
+            handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER, 4000);
         }
+    }
+
+    private void updateVoiceProgress(int progress) {
+
+        //第一个参数：声音的类型
+        //第二个参数：声音的值：0~15
+        //第三个参数：1，显示系统调声音的；0，不显示
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+        seekbarVoice.setProgress(progress);
+
+        currentVolume = progress;
+
     }
 
     private void updateVoice(int progress) {
 
-        if(isMute){
-            am.setStreamVolume(AudioManager.STREAM_MUSIC,0,0);
+        if (isMute) {
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
             seekbarVoice.setProgress(0);
-        }else{
+        } else {
             //第一个参数：声音的类型
             //第二个参数：声音的值：0~15
             //第三个参数：1，显示系统调声音的；0，不显示
-            am.setStreamVolume(AudioManager.STREAM_MUSIC,progress,0);
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
             seekbarVoice.setProgress(progress);
         }
 
@@ -606,7 +617,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
          */
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER,4000);
+            handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER, 4000);
         }
     }
 
@@ -741,8 +752,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         public void onPrepared(MediaPlayer mp) {
 
             //得到视频原始的大小
-             videoWidth = mp.getVideoWidth();
-             videoHeight = mp.getVideoHeight();
+            videoWidth = mp.getVideoWidth();
+            videoHeight = mp.getVideoHeight();
 
             //设置默认大小
             setVideoType(VIDEO_TYPE_DEFAULT);
@@ -765,16 +776,52 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         }
     }
 
+    private float startY;
+    /**
+     * 滑动的区域
+     */
+    private int touchRang = 0;
+
+    /**
+     * 当按下的时候的音量
+     */
+    private int mVol;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
         detector.onTouchEvent(event);//把事件传递给手势识别器
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//            Intent intent = new Intent(this,TestB.class);
-//            startActivity(intent);
+            //1.按下
+            //按下的时候记录起始坐标，最大的滑动区域（屏幕的高），当前的音量
+            startY = event.getY();
+            touchRang = Math.min(screeHeight, screenWidth);//screeHeight
+            mVol = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+            //把消息移除
+            handler.removeMessages(HIDE_MEDIA_CONTROLLER);
 
-            return true;
+
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            float endY = event.getY();
+            //屏幕滑动的距离
+            float distanceY = startY - endY;
+            //滑动屏幕的距离 ： 总距离  = 改变的声音 ： 总声音
+
+            //改变的声音 = （滑动屏幕的距离 / 总距离)*总声音
+            float delta = (distanceY/touchRang) * maxVolume;
+            // 设置的声音  = 原来记录的 + 改变的声音
+            int volue = (int) Math.min(Math.max(mVol + delta,0),maxVolume);
+            //判断
+            if(delta != 0){
+                updateVoiceProgress(volue);
+            }
+
+//            startY = event.getY();//不能添加
+
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER,4000);
         }
-        return super.onTouchEvent(event);
+        return true;
     }
 
     /**
