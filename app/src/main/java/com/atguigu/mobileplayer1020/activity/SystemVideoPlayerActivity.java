@@ -14,6 +14,7 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -559,6 +560,12 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         //第三个参数：1，显示系统调声音的；0，不显示
         am.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
         seekbarVoice.setProgress(progress);
+        if(progress <=0){
+            //设置静音
+            isMute = true;
+        }else {
+            isMute = false;
+        }
 
         currentVolume = progress;
 
@@ -833,5 +840,26 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         //得到视频列表
         mediaItems = (ArrayList<MediaItem>) getIntent().getSerializableExtra("videolist");
         position = getIntent().getIntExtra("position", 0);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode ==KeyEvent.KEYCODE_VOLUME_DOWN){
+            //改变音量值
+            currentVolume--;
+            updateVoiceProgress(currentVolume);
+            //移除消息
+            handler.removeMessages(HIDE_MEDIA_CONTROLLER);
+            //发消息
+            handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER,4000);
+            return true;
+        }else if(keyCode ==KeyEvent.KEYCODE_VOLUME_UP){
+            currentVolume++;
+            updateVoiceProgress(currentVolume);
+            handler.removeMessages(HIDE_MEDIA_CONTROLLER);
+            handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER,4000);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
