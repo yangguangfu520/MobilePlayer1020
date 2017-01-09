@@ -1,6 +1,10 @@
 package com.atguigu.mobileplayer1020.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -46,6 +50,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     private Button btnNext;
     private Button btnSwichScreen;
     private Utils utils;
+    private MyBroadcastReceiver receiver;
 
     /**
      * Find the Views in the layout<br />
@@ -102,6 +107,13 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     private void initData() {
         utils = new Utils();
+
+        //注册监听电量广播
+        receiver = new MyBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        //监听电量变化
+        filter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(receiver,filter);
     }
 
     private Handler handler = new Handler() {
@@ -125,6 +137,42 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             }
         }
     };
+
+    class MyBroadcastReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //得到电量:0~100
+            int level = intent.getIntExtra("level",0);
+            //主线程
+            setBattery(level);
+        }
+    }
+
+    /**
+     * 设置电量
+     * @param level
+     */
+    private void setBattery(int level) {
+        if(level <=0 ){
+            ivBattery.setImageResource(R.drawable.ic_battery_0);
+        }else if(level<=10){
+            ivBattery.setImageResource(R.drawable.ic_battery_10);
+        }else if(level<=20){
+            ivBattery.setImageResource(R.drawable.ic_battery_20);
+        }else if(level<=40){
+            ivBattery.setImageResource(R.drawable.ic_battery_40);
+        }else if(level<=60){
+            ivBattery.setImageResource(R.drawable.ic_battery_60);
+        }else if(level<=80){
+            ivBattery.setImageResource(R.drawable.ic_battery_80);
+        }else if(level<=100){
+            ivBattery.setImageResource(R.drawable.ic_battery_100);
+        }else{
+            ivBattery.setImageResource(R.drawable.ic_battery_100);
+        }
+
+    }
 
     /**
      * Handle button click events<br />
