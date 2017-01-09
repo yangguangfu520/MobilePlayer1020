@@ -172,6 +172,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     private void setData() {
         //设置播放地址
         videoview.setVideoURI(uri);
+
+
     }
 
     private void setLinstener() {
@@ -185,6 +187,45 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         //设置控制面板
 //        videoview.setMediaController(new MediaController(this));
 
+        //设置视频的拖动监听
+        seekbarVideo.setOnSeekBarChangeListener(new MyOnSeekBarChangeListener());
+
+
+    }
+
+    class MyOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener{
+
+        /**
+         * 状态变化的时候回调
+         * @param seekBar
+         * @param progress 当前改变的进度-要拖动到的位置
+         * @param fromUser 用户导致的改变true,否则false
+         */
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if(fromUser){
+                videoview.seekTo(progress);
+            }
+
+        }
+
+        /**
+         * 当手指一按下的时候回调
+         * @param seekBar
+         */
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        /**
+         * 当手指离开的时候回调
+         * @param seekBar
+         */
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
     }
 
     class MyOnCompletionListener implements MediaPlayer.OnCompletionListener {
@@ -215,6 +256,11 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         public void onPrepared(MediaPlayer mp) {
             //开始播放
             videoview.start();
+
+            //准备好的时候
+            //1.视频的总播放时长和SeeKBar关联起来
+            int duration = videoview.getDuration();
+            seekbarVideo.setMax(duration);
 
         }
     }
