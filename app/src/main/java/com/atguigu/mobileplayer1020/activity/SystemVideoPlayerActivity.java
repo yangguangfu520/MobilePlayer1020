@@ -24,6 +24,9 @@ import android.widget.VideoView;
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.utils.Utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class SystemVideoPlayerActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = SystemVideoPlayerActivity.class.getSimpleName();//"SystemVideoPlayerActivity;
@@ -129,6 +132,12 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
                     //设置播放进度的时间
                     tvCurrenttime.setText(utils.stringForTime(currentPosition));
+
+
+                    //得到系统的时间并且更新
+                    tvSystetime.setText(getSystemTime());
+
+
                     //不断发消息
                     removeMessages(PROGRESS);
                     sendEmptyMessageDelayed(PROGRESS, 1000);
@@ -137,6 +146,15 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             }
         }
     };
+
+    /**
+     * 得到系统的时间
+     * @return
+     */
+    private String getSystemTime() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        return format.format(new Date());
+    }
 
     class MyBroadcastReceiver extends BroadcastReceiver{
 
@@ -244,8 +262,16 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Log.e(TAG, "onDestroy");
+        //是否资源-释放孩子的
+        if(receiver != null){
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
+        //消息移除
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
+
     }
 
 
