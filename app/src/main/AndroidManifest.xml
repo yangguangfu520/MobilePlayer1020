@@ -24,6 +24,7 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.SystemVideoPlayerActivity"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
         <activity android:name=".activity.TestB"
             android:theme="@android:style/Theme.Dialog"

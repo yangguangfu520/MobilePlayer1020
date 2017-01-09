@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -32,11 +33,16 @@ import java.util.Date;
 public class SystemVideoPlayerActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = SystemVideoPlayerActivity.class.getSimpleName();//"SystemVideoPlayerActivity;
+
     private VideoView videoview;
     /**
      * 进度跟新
      */
     private static final int PROGRESS = 0;
+    /**
+     * 隐藏控制面板
+     */
+    private static final int HIDE_MEDIA_CONTROLLER = 1;
 
     private LinearLayout llTop;
     private TextView tvName;
@@ -61,6 +67,11 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
      */
     private ArrayList<MediaItem> mediaItems;
     private int position;
+    private GestureDetector detector;
+    /**
+     * 是否显示控制面板
+     */
+    private boolean isShowMediaController = false;
 
     /**
      * Find the Views in the layout<br />
@@ -95,6 +106,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         btnStartPause.setOnClickListener(this);
         btnNext.setOnClickListener(this);
         btnSwichScreen.setOnClickListener(this);
+
+        hideMediaController();//隐藏控制面板
     }
 
 
@@ -125,6 +138,62 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         //监听电量变化
         filter.addAction(Intent.ACTION_BATTERY_CHANGED);
         registerReceiver(receiver, filter);
+
+        //初始化手势识别器
+        detector = new GestureDetector(this, new MySimpleOnGestureListener());
+    }
+
+    class MySimpleOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public void onLongPress(MotionEvent e) {
+            super.onLongPress(e);
+//                Toast.makeText(SystemVideoPlayerActivity.this, "我被长按了", Toast.LENGTH_SHORT).show();
+            startAndPause();
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Toast.makeText(SystemVideoPlayerActivity.this, "我被双击了", Toast.LENGTH_SHORT).show();
+            return super.onDoubleTap(e);
+
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+//            Toast.makeText(SystemVideoPlayerActivity.this, "我被单击", Toast.LENGTH_SHORT).show();
+            if (isShowMediaController) {
+                //隐藏
+                hideMediaController();
+                //把消息移除
+                handler.removeMessages(HIDE_MEDIA_CONTROLLER);
+            } else {
+                //显示
+                showMediaController();
+                //重新发消息-4秒隐藏
+                handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER, 4000);
+            }
+            return super.onSingleTapConfirmed(e);
+        }
+    }
+
+    /**
+     * 显示控制面板
+     */
+    private void showMediaController() {
+        isShowMediaController = true;
+        llTop.setVisibility(View.VISIBLE);
+        llBottom.setVisibility(View.VISIBLE);
+
+    }
+
+    /**
+     * 隐藏控制面板
+     */
+    private void hideMediaController() {
+        isShowMediaController = false;
+        llTop.setVisibility(View.GONE);
+        llBottom.setVisibility(View.GONE);
+
     }
 
     private Handler handler = new Handler() {
@@ -132,6 +201,9 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case HIDE_MEDIA_CONTROLLER:
+                    hideMediaController();//隐藏控制面板
+                    break;
                 case PROGRESS://视频播放进度的更新
                     int currentPosition = videoview.getCurrentPosition();
                     //设置视频更新
@@ -221,17 +293,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             // Handle clicks for btnPre
             setPreVideo();
         } else if (v == btnStartPause) {
-            if (videoview.isPlaying()) {//是否在播放
-                //当前在播放要设置为暂停
-                videoview.pause();
-                //按钮状态-播放状态
-                btnStartPause.setBackgroundResource(R.drawable.btn_start_selector);
-            } else {
-                //当前暂停状态要设置播放状态
-                videoview.start();
-                //按钮状态-暂停状态
-                btnStartPause.setBackgroundResource(R.drawable.btn_pause_selector);
-            }
+            startAndPause();
             // Handle clicks for btnStartPause
         } else if (v == btnNext) {//下一个的点击事件
             // Handle clicks for btnNext
@@ -239,9 +301,26 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         } else if (v == btnSwichScreen) {
             // Handle clicks for btnSwichScreen
         }
+
+        //移除消息
+        handler.removeMessages(HIDE_MEDIA_CONTROLLER);
+        //重新发消息
+        handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER,4000);
     }
 
-
+    private void startAndPause() {
+        if (videoview.isPlaying()) {//是否在播放
+            //当前在播放要设置为暂停
+            videoview.pause();
+            //按钮状态-播放状态
+            btnStartPause.setBackgroundResource(R.drawable.btn_start_selector);
+        } else {
+            //当前暂停状态要设置播放状态
+            videoview.start();
+            //按钮状态-暂停状态
+            btnStartPause.setBackgroundResource(R.drawable.btn_pause_selector);
+        }
+    }
 
 
     @Override
@@ -291,17 +370,16 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     private void setData() {
 
-        if(mediaItems != null && mediaItems.size() >0){
+        if (mediaItems != null && mediaItems.size() > 0) {
             //根据位置获取播放视频的对象
             MediaItem mediaItem = mediaItems.get(position);
             videoview.setVideoPath(mediaItem.getData());
             tvName.setText(mediaItem.getName());
-        }else if(uri != null){
+        } else if (uri != null) {
             //设置播放地址
             videoview.setVideoURI(uri);
             tvName.setText(uri.toString());
         }
-
 
 
         checkButtonStatus();
@@ -350,7 +428,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
          */
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
+            //移除消息
+            handler.removeMessages(HIDE_MEDIA_CONTROLLER);
         }
 
         /**
@@ -360,7 +439,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
          */
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-
+            handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER,4000);
         }
     }
 
@@ -377,9 +456,9 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     private void setPreVideo() {
         //1.判断一下列表
-        if(mediaItems != null && mediaItems.size() >0){
-            position --;
-            if(position >= 0){
+        if (mediaItems != null && mediaItems.size() > 0) {
+            position--;
+            if (position >= 0) {
                 MediaItem mediaItem = mediaItems.get(position);
                 //设置标题
                 tvName.setText(mediaItem.getName());
@@ -388,7 +467,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 //校验按钮状态
                 checkButtonStatus();
 
-            }else{
+            } else {
                 //越界
                 position = 0;
             }
@@ -402,9 +481,9 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
      */
     private void setNextVideo() {
         //1.判断一下列表
-        if(mediaItems != null && mediaItems.size() >0){
-            position ++;
-            if(position < mediaItems.size()){
+        if (mediaItems != null && mediaItems.size() > 0) {
+            position++;
+            if (position < mediaItems.size()) {
                 MediaItem mediaItem = mediaItems.get(position);
                 //设置标题
                 tvName.setText(mediaItem.getName());
@@ -412,19 +491,19 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 videoview.setVideoPath(mediaItem.getData());
                 //专题的校验
                 checkButtonStatus();
-                
-                if(position ==mediaItems.size()-1){
+
+                if (position == mediaItems.size() - 1) {
                     Toast.makeText(this, "哥们播放最后一个视频了哦", Toast.LENGTH_SHORT).show();
                 }
 
-            }else{
+            } else {
                 //越界
-                position = mediaItems.size()-1;
+                position = mediaItems.size() - 1;
                 finish();
             }
         }
         //2. 单个的uri
-        else if(uri != null){
+        else if (uri != null) {
             finish();
         }
 
@@ -433,24 +512,24 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     private void checkButtonStatus() {
         //1.判断一下列表
-        if(mediaItems != null && mediaItems.size() >0){
+        if (mediaItems != null && mediaItems.size() > 0) {
             //1.其他设置默认
             setButtonEnable(true);
 
             //2.播放第0个，上一个i设置灰色
-            if(position==0){
+            if (position == 0) {
                 btnPre.setBackgroundResource(R.drawable.btn_pre_gray);
                 btnPre.setEnabled(false);
             }
             //3.播放最后一个设置，下一个按钮设置灰色
-            if(position ==mediaItems.size()-1){
+            if (position == mediaItems.size() - 1) {
                 btnNext.setBackgroundResource(R.drawable.btn_next_gray);
                 btnNext.setEnabled(false);
             }
 
         }
         //2. 单个的uri
-        else if(uri != null){
+        else if (uri != null) {
 
             //上一个和下一个都要设置灰色
             setButtonEnable(false);
@@ -459,14 +538,15 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     /***
      * 设置按钮的可点状态
+     *
      * @param isEnable
      */
-    private void setButtonEnable(boolean isEnable){
-        if(isEnable){
+    private void setButtonEnable(boolean isEnable) {
+        if (isEnable) {
             btnPre.setBackgroundResource(R.drawable.btn_pre_selector);
             btnNext.setBackgroundResource(R.drawable.btn_next_selector);
 
-        }else{
+        } else {
             btnPre.setBackgroundResource(R.drawable.btn_pre_gray);
             btnNext.setBackgroundResource(R.drawable.btn_next_gray);
         }
@@ -512,6 +592,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        detector.onTouchEvent(event);//把事件传递给手势识别器
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 //            Intent intent = new Intent(this,TestB.class);
 //            startActivity(intent);
@@ -529,6 +610,6 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         uri = getIntent().getData();
         //得到视频列表
         mediaItems = (ArrayList<MediaItem>) getIntent().getSerializableExtra("videolist");
-        position = getIntent().getIntExtra("position",0);
+        position = getIntent().getIntExtra("position", 0);
     }
 }
