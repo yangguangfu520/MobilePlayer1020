@@ -109,6 +109,17 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         } else if ( v == btnPre ) {
             // Handle clicks for btnPre
         } else if ( v == btnStartPause ) {
+            if(videoview.isPlaying()){//是否在播放
+                //当前在播放要设置为暂停
+                videoview.pause();
+                //按钮状态-播放状态
+                btnStartPause.setBackgroundResource(R.drawable.btn_start_selector);
+            }else{
+                //当前暂停状态要设置播放状态
+                videoview.start();
+                //按钮状态-暂停状态
+                btnStartPause.setBackgroundResource(R.drawable.btn_pause_selector);
+            }
             // Handle clicks for btnStartPause
         } else if ( v == btnNext ) {
             // Handle clicks for btnNext
