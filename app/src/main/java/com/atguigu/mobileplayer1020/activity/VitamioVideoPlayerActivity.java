@@ -1,8 +1,10 @@
 package com.atguigu.mobileplayer1020.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
@@ -845,15 +847,23 @@ public class VitamioVideoPlayerActivity extends Activity implements View.OnClick
 
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            Toast.makeText(VitamioVideoPlayerActivity.this, "播放出错了，亲", Toast.LENGTH_SHORT).show();
-            //1.播放的视频格式不支持--跳转万能播放器播放
-
-            //2.播放网络资源视频的时候，断网了==提示-重试（3次）
-
-
-            //3.视频内容有缺损
+//          //显示播放出错提醒
+            showErrorDialog();
             return true;
         }
+    }
+
+    private void showErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提醒");
+        builder.setMessage("播放器播放出错了，请检查视频是否损坏，或者网络中断");
+        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
     }
 
     class MyOnPreparedListener implements MediaPlayer.OnPreparedListener {
@@ -875,7 +885,7 @@ public class VitamioVideoPlayerActivity extends Activity implements View.OnClick
 
             //开始播放
 //            videoview.start();
-            mp.setPlaybackSpeed(2.0f);//二倍速度播放
+            mp.setPlaybackSpeed(1.0f);//二倍速度播放
 
             //统计用户的行为-拖动
 //            mp.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
