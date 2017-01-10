@@ -1,0 +1,25 @@
+apply plugin: 'com.android.application'
+
+dependencies {
+    compile project(':vitamio')
+    compile files('libs/umeng-analytics-v5.6.1.jar')
+}
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.3"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 24
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
+}
+
