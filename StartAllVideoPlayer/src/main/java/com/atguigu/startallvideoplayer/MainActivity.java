@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
 //            //第二参数：路径对应的类型
 //        intent.setDataAndType(Uri.parse("http://10.0.2.2:8080/yellow.mp4"), "video/*");
 //        intent.setDataAndType(Uri.parse("http://192.168.1.30:8080/yellow.mp4"), "video/*");
-        intent.setDataAndType(Uri.parse("http://192.168.191.1:8080/yellow.mp4"), "video/*");
-//        intent.setDataAndType(Uri.parse("http://vfx.mtime.cn/Video/2016/12/29/mp4/161229134943070513_480.mp4"), "video/*");
+//        intent.setDataAndType(Uri.parse("http://192.168.191.1:8080/yellow.mp4"), "video/*");
+        intent.setDataAndType(Uri.parse("http://vfx.mtime.cn/Video/2016/12/29/mp4/161229134943070513_480.mp4"), "video/*");
         startActivity(intent);
     }
 }
