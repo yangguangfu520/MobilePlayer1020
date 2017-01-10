@@ -746,7 +746,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
             Toast.makeText(SystemVideoPlayerActivity.this, "播放出错了，亲", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         }
     }
 
