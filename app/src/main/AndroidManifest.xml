@@ -26,6 +26,7 @@
         <activity
             android:name=".activity.SystemVideoPlayerActivity"
             android:screenOrientation="landscape"
+            android:label="@string/player_name"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
