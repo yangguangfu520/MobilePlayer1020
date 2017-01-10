@@ -113,6 +113,10 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
      * 是否静音
      */
     private boolean isMute = false;
+    /**
+     * 是否网络视频
+     */
+    private boolean isNetUrl;
 
     /**
      * Find the Views in the layout<br />
@@ -331,6 +335,16 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                     tvSystetime.setText(getSystemTime());
 
 
+                    //设置视频缓存经度更新
+                    if(isNetUrl){
+
+                        int buffer =  videoview.getBufferPercentage();//0~100
+                        //缓存进度
+                        int secondaryProgress = buffer*seekbarVideo.getMax()/100;
+                        seekbarVideo.setSecondaryProgress(secondaryProgress);
+                    }
+
+
                     //不断发消息
                     removeMessages(PROGRESS);
                     sendEmptyMessageDelayed(PROGRESS, 1000);
@@ -498,10 +512,12 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             MediaItem mediaItem = mediaItems.get(position);
             videoview.setVideoPath(mediaItem.getData());
             tvName.setText(mediaItem.getName());
+            isNetUrl = utils.isNetUrl(mediaItem.getData());
         } else if (uri != null) {
             //设置播放地址
             videoview.setVideoURI(uri);
             tvName.setText(uri.toString());
+            isNetUrl = utils.isNetUrl(uri.toString());
         }
 
 
@@ -657,8 +673,11 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 MediaItem mediaItem = mediaItems.get(position);
                 //设置标题
                 tvName.setText(mediaItem.getName());
+
+                isNetUrl = utils.isNetUrl(mediaItem.getData());
                 //设置播放地址
                 videoview.setVideoPath(mediaItem.getData());
+
                 //校验按钮状态
                 checkButtonStatus();
 
@@ -685,8 +704,10 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                 ll_loading.setVisibility(View.VISIBLE);
                 //设置标题
                 tvName.setText(mediaItem.getName());
+                isNetUrl = utils.isNetUrl(mediaItem.getData());
                 //设置播放地址
                 videoview.setVideoPath(mediaItem.getData());
+
                 //专题的校验
                 checkButtonStatus();
 
