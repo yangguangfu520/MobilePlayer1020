@@ -15,6 +15,40 @@ public class MediaItem implements Serializable{
     long size ;
     String data ;
     String artist ;
+    /**
+     * 图片路径
+     */
+    String imageUrl;
+    /**
+     * 描述
+     */
+    String desc;
+
+    String heightUrl;
+
+    public String getHeightUrl() {
+        return heightUrl;
+    }
+
+    public void setHeightUrl(String heightUrl) {
+        this.heightUrl = heightUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
     public String getName() {
         return name;
@@ -64,6 +98,8 @@ public class MediaItem implements Serializable{
                 ", size=" + size +
                 ", data='" + data + '\'' +
                 ", artist='" + artist + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", desc='" + desc + '\'' +
                 '}';
     }
 }
