@@ -32,8 +32,9 @@
         <activity
             android:name=".activity.SystemVideoPlayerActivity"
             android:screenOrientation="landscape"
+
             android:label="@string/player_name"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+            android:theme="@style/noAnimation_Theme" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -262,8 +263,9 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity android:name=".activity.VitamioVideoPlayerActivity"
+
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            android:theme="@style/noAnimation_Theme"
             />
     </application>
 

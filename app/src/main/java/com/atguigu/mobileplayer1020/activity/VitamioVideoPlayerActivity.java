@@ -462,7 +462,7 @@ public class VitamioVideoPlayerActivity extends Activity implements View.OnClick
             updateVoice(currentVolume);
         } else if (v == btnSwichePlayer) {
             // Handle clicks for btnSwichePlayer
-
+            showSwichPlayerDialog();
         } else if (v == btnExit) {
             // Handle clicks for btnExit
             finish();
@@ -490,6 +490,50 @@ public class VitamioVideoPlayerActivity extends Activity implements View.OnClick
         handler.removeMessages(HIDE_MEDIA_CONTROLLER);
         //重新发消息
         handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER, 4000);
+    }
+
+    private void showSwichPlayerDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提醒");
+        builder.setMessage("当前播放使用万能播放器播放，当播放出现有视频有色块，播放效果不理想，请切换系统播放器播放");
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startSystemVideoPlayer();
+            }
+        });
+        builder.show();
+    }
+
+    private void startSystemVideoPlayer() {
+        if(videoview != null){
+            videoview.stopPlayback();
+        }
+
+        Intent intent = new Intent(this,SystemVideoPlayerActivity.class);
+
+        if(mediaItems != null && mediaItems.size() >0){
+
+            Bundle bundle = new Bundle();
+            //列表数据
+            bundle.putSerializable("videolist",mediaItems);
+            intent.putExtras(bundle);
+            //传递点击的位置
+            intent.putExtra("position",position);
+
+        }else if(uri != null){
+            intent.setDataAndType(uri,"video/*");
+        }
+
+        startActivity(intent);
+
+        finish();
     }
 
     private void startAndPause() {
