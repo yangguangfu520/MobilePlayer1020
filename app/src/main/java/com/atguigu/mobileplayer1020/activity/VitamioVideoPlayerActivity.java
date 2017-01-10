@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,15 +26,18 @@ import android.widget.Toast;
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.utils.Utils;
-import com.atguigu.mobileplayer1020.view.VideoView;
+import com.atguigu.mobileplayer1020.view.VitamioVideoView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class SystemVideoPlayerActivity extends Activity implements View.OnClickListener {
+import io.vov.vitamio.MediaPlayer;
+import io.vov.vitamio.Vitamio;
 
-    private static final String TAG = SystemVideoPlayerActivity.class.getSimpleName();//"SystemVideoPlayerActivity;
+public class VitamioVideoPlayerActivity extends Activity implements View.OnClickListener {
+
+    private static final String TAG = VitamioVideoPlayerActivity.class.getSimpleName();//"SystemVideoPlayerActivity;
     /**
      * 视频默认屏幕大小播放
      */
@@ -46,7 +48,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     private static final int VIDEO_TYPE_FULL = 2;
 
 
-    private VideoView videoview;
+    private VitamioVideoView videoview;
     /**
      * 进度跟新
      */
@@ -133,8 +135,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
      * (http://www.buzzingandroid.com/tools/android-layout-finder)
      */
     private void findViews() {
-        setContentView(R.layout.activity_system_video_player);
-        videoview = (VideoView) findViewById(R.id.videoview);
+        setContentView(R.layout.activity_vitamio_video_player);
+        videoview = (VitamioVideoView) findViewById(R.id.videoview);
         llTop = (LinearLayout) findViewById(R.id.ll_top);
         tvName = (TextView) findViewById(R.id.tv_name);
         ivBattery = (ImageView) findViewById(R.id.iv_battery);
@@ -192,7 +194,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e(TAG, "onCreate");
-
+        //初始化Vitamio解码器
+        Vitamio.isInitialized(this);
         initData();
         findViews();
 
@@ -335,7 +338,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             super.handleMessage(msg);
             switch (msg.what) {
                 case SHOW_NET_SPEED:
-                    String netSpeed = utils.showNetSpeed(SystemVideoPlayerActivity.this);
+                    String netSpeed = utils.showNetSpeed(VitamioVideoPlayerActivity.this);
                     //不为空
                     tv_loading.setText("正在加载...."+netSpeed);
                     tv_buffer.setText("缓存中...."+netSpeed);
@@ -347,7 +350,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
                     hideMediaController();//隐藏控制面板
                     break;
                 case PROGRESS://视频播放进度的更新
-                    int currentPosition = videoview.getCurrentPosition();
+                    int currentPosition = (int) videoview.getCurrentPosition();
                     //设置视频更新
                     seekbarVideo.setProgress(currentPosition);
 
@@ -842,9 +845,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-//            Toast.makeText(SystemVideoPlayerActivity.this, "播放出错了，亲", Toast.LENGTH_SHORT).show();
+            Toast.makeText(VitamioVideoPlayerActivity.this, "播放出错了，亲", Toast.LENGTH_SHORT).show();
             //1.播放的视频格式不支持--跳转万能播放器播放
-            startVitamioVideoPlayer();
 
             //2.播放网络资源视频的时候，断网了==提示-重试（3次）
 
@@ -852,35 +854,6 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             //3.视频内容有缺损
             return true;
         }
-    }
-
-    /**
-     * 启动万能解码器
-     */
-    private void startVitamioVideoPlayer() {
-
-        if(videoview != null){
-            videoview.stopPlayback();
-        }
-
-        Intent intent = new Intent(this,VitamioVideoPlayerActivity.class);
-
-        if(mediaItems != null && mediaItems.size() >0){
-
-            Bundle bundle = new Bundle();
-            //列表数据
-            bundle.putSerializable("videolist",mediaItems);
-            intent.putExtras(bundle);
-            //传递点击的位置
-            intent.putExtra("position",position);
-
-        }else if(uri != null){
-            intent.setDataAndType(uri,"video/*");
-        }
-
-        startActivity(intent);
-
-        finish();
     }
 
     class MyOnPreparedListener implements MediaPlayer.OnPreparedListener {
@@ -901,7 +874,8 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             setVideoType(VIDEO_TYPE_DEFAULT);
 
             //开始播放
-            videoview.start();
+//            videoview.start();
+            mp.setPlaybackSpeed(2.0f);//二倍速度播放
 
             //统计用户的行为-拖动
 //            mp.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
@@ -912,7 +886,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 //            });
             //准备好的时候
             //1.视频的总播放时长和SeeKBar关联起来
-            int duration = videoview.getDuration();
+            int duration = (int) videoview.getDuration();
             seekbarVideo.setMax(duration);
 
             //设置总时长

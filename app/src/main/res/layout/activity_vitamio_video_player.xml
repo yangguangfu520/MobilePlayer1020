@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_system_video_player"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:gravity="center"
+    tools:context="com.atguigu.mobileplayer1020.activity.SystemVideoPlayerActivity">
+
+
+    <com.atguigu.mobileplayer1020.view.VitamioVideoView
+        android:layout_centerInParent="true"
+        android:id="@+id/videoview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include layout="@layout/mediacontroller"/>
+    <include layout="@layout/loading" android:id="@+id/ll_loading"/>
+    <include layout="@layout/buffer" android:id="@+id/ll_buffer"/>
+
+</RelativeLayout>
