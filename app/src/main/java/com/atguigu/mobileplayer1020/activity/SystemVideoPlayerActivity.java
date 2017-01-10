@@ -903,6 +903,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
         startActivity(intent);
 
         finish();
+
     }
 
     class MyOnPreparedListener implements MediaPlayer.OnPreparedListener {
