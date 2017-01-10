@@ -16,5 +16,6 @@
         android:layout_height="match_parent" />
 
     <include layout="@layout/mediacontroller"/>
+    <include layout="@layout/loading" android:id="@+id/ll_loading"/>
 
 </RelativeLayout>
