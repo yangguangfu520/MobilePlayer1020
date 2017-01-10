@@ -169,12 +169,14 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e(TAG, "onCreate");
-        initData();
         findViews();
+        initData();
+
         getData();
         //设置视频加载的监听
         setLinstener();
         setData();
+
 
     }
 
@@ -837,6 +839,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
     private void getData() {
         //一个地址：从文件发起的单个播放请求
         uri = getIntent().getData();
+        Log.e("TAG","uri==="+uri);
         //得到视频列表
         mediaItems = (ArrayList<MediaItem>) getIntent().getSerializableExtra("videolist");
         position = getIntent().getIntExtra("position", 0);
