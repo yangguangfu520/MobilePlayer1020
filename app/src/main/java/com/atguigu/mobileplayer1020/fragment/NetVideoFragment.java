@@ -1,11 +1,16 @@
 package com.atguigu.mobileplayer1020.fragment;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.atguigu.mobileplayer1020.R;
+import com.atguigu.mobileplayer1020.activity.SystemVideoPlayerActivity;
+import com.atguigu.mobileplayer1020.adapter.NetVideoAdapter;
 import com.atguigu.mobileplayer1020.base.BaseFragment;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.utils.Constant;
@@ -32,6 +37,7 @@ public class NetVideoFragment extends BaseFragment {
      * 数据集合
      */
     private ArrayList<MediaItem> mediaItems;
+    private NetVideoAdapter adapter;
 
     @ViewInject(R.id.listview)
     private ListView listview;
@@ -44,7 +50,28 @@ public class NetVideoFragment extends BaseFragment {
         View view  = View.inflate(mContext, R.layout.fragment_net_video,null);
         //把view注入到xUtils3框中
         x.view().inject(NetVideoFragment.this,view);
+        //才初始化好的
+
+        listview.setOnItemClickListener(new MyOnItemClickListener());
         return view;
+    }
+
+    class MyOnItemClickListener implements AdapterView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> parent,View view, int position, long id) {
+            //传递列表数据
+            Intent intent = new Intent(mContext,SystemVideoPlayerActivity.class);
+
+            Bundle bundle = new Bundle();
+            //列表数据
+            bundle.putSerializable("videolist",mediaItems);
+            intent.putExtras(bundle);
+            //传递点击的位置
+            intent.putExtra("position",position);
+            startActivity(intent);
+
+        }
     }
 
     @Override
@@ -97,6 +124,16 @@ public class NetVideoFragment extends BaseFragment {
         mediaItems = parsedJson(json);
 
         Log.e("TAG","mediaItems.get(0).getName()=="+mediaItems.get(0).getName());
+        if(mediaItems != null && mediaItems.size() >0){
+            //有数据
+            tv_no_media.setVisibility(View.GONE);
+            adapter = new NetVideoAdapter(mContext,mediaItems);
+            //设置适配器
+            listview.setAdapter(adapter);
+
+        }else{
+            tv_no_media.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
