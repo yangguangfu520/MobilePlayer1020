@@ -28,4 +28,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':vitamio')
     compile project(':xutils')
+    compile project(':MaterialRefresh_library')
 }

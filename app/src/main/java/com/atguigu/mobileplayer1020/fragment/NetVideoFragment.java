@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.activity.SystemVideoPlayerActivity;
@@ -14,6 +15,8 @@ import com.atguigu.mobileplayer1020.adapter.NetVideoAdapter;
 import com.atguigu.mobileplayer1020.base.BaseFragment;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.utils.Constant;
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +47,9 @@ public class NetVideoFragment extends BaseFragment {
 
     @ViewInject(R.id.tv_no_media)
     private  TextView tv_no_media;
+
+    @ViewInject(R.id.refresh)
+    MaterialRefreshLayout refreshLayout;
     @Override
     public View initView() {
         Log.e("TAG","网络视频ui初始化了。。");
@@ -53,7 +59,24 @@ public class NetVideoFragment extends BaseFragment {
         //才初始化好的
 
         listview.setOnItemClickListener(new MyOnItemClickListener());
+        //监听下拉和上拉刷新
+        refreshLayout.setMaterialRefreshListener(new MyMaterialRefreshListener());
         return view;
+    }
+
+    class MyMaterialRefreshListener extends MaterialRefreshListener {
+
+        @Override
+        public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+//            Toast.makeText(mContext, "下拉刷新", Toast.LENGTH_SHORT).show();
+            getDataFromNet();
+        }
+
+        @Override
+        public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
+            super.onRefreshLoadMore(materialRefreshLayout);
+            Toast.makeText(mContext, "加载更多", Toast.LENGTH_SHORT).show();
+        }
     }
 
     class MyOnItemClickListener implements AdapterView.OnItemClickListener{
@@ -95,6 +118,8 @@ public class NetVideoFragment extends BaseFragment {
                 Log.e("TA","xUtils3联网请求成功==");
                 Log.e("TAG","线程名称=="+Thread.currentThread().getName());
                 processData(result);
+                //完成刷新
+                refreshLayout.finishRefresh();
             }
 
             @Override
