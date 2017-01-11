@@ -94,6 +94,11 @@ public class MusicPlayerService extends Service {
         public void setPlayMode(int mode) throws RemoteException {
             service.setPlayMode(mode);
         }
+
+        @Override
+        public boolean isPlaying() throws RemoteException {
+            return mediaPlayer.isPlaying();
+        }
     };
     private ArrayList<MediaItem> mediaItems;
     /**
@@ -102,6 +107,9 @@ public class MusicPlayerService extends Service {
     private boolean isLoaded = false;
     private MediaItem mediaItem;
     private int position;
+    /**
+     * 播放器
+     */
     private MediaPlayer mediaPlayer;
 
     /**
