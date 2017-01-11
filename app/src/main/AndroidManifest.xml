@@ -4,20 +4,20 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <!--Vitamio的权限-->
+    <!-- Vitamio的权限 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
+        android:name=".app.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".app.MyApplication"
         android:theme="@style/AppTheme">
         <activity android:name=".WelcomeActivity">
             <intent-filter>
@@ -32,10 +32,9 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.SystemVideoPlayerActivity"
-            android:screenOrientation="landscape"
-
             android:label="@string/player_name"
-            android:theme="@style/noAnimation_Theme" >
+            android:screenOrientation="landscape"
+            android:theme="@style/noAnimation_Theme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -251,9 +250,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
-            </activity>
-
+        </activity>
 
         <!-- Don't forgot InitActivity -->
         <activity
@@ -262,12 +259,11 @@
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
-        <activity android:name=".activity.VitamioVideoPlayerActivity"
-
+        <activity
+            android:name=".activity.VitamioVideoPlayerActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/noAnimation_Theme"
-            />
+            android:theme="@style/noAnimation_Theme" />
+        <activity android:name=".activity.SystemAudioPlayerActivity"></activity>
     </application>
 
 </manifest>
