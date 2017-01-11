@@ -264,6 +264,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/noAnimation_Theme" />
         <activity android:name=".activity.SystemAudioPlayerActivity"></activity>
+        <service android:name=".service.MusicPlayerService"></service>
     </application>
 
 </manifest>
