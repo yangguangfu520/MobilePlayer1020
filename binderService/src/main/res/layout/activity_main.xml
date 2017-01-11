@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/btn_bindService"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="绑定方式开启服务" >
+    </Button>
+
+    <Button
+        android:id="@+id/btn_unbindService"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="取消绑定服务" >
+    </Button>
+
+    <Button
+        android:id="@+id/btn_call_back"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="让Service回调Activity方法" >
+    </Button>
+    
+    <Button
+        android:id="@+id/btn_get_data"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="得到服务中的数据" >
+    </Button>
+
+</LinearLayout>
