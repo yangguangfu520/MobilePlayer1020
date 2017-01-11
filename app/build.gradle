@@ -29,6 +29,8 @@ dependencies {
     compile project(':vitamio')
     compile project(':xutils')
     compile project(':MaterialRefresh_library')
-    compile files('libs/glide-3.7.0.jar')
+//    compile files('libs/glide-3.7.0.jar')
+    compile 'com.github.bumptech.glide:glide:3.5.2'
+
     compile files('libs/picasso-2.5.2.jar')
 }

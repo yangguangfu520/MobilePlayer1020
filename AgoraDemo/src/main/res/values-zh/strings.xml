@@ -1,0 +1,41 @@
+<resources>
+
+    <string name="app_name">AgoraDemo</string>
+    <string name="app_conf">Agora会议室</string>
+
+    <string name="title_channel">房间%s</string>
+    <string name="action_settings">设置</string>
+
+    <string name="key_input">输入厂商Key</string>
+
+    <string name="room_input">输入房间号码</string>
+
+    <string name="video_enter">进入视频通话</string>
+
+    <string name="micro_enter">进入语音通话</string>
+
+    <string name="video_button">视频通话</string>
+
+    <string name="micro_button">语音通话</string>
+
+    <string name="key_required">Key不能为空</string>
+
+    <string name="room_required">房间号不能为空, 且需要是数字</string>
+
+    <string name="room_button_one">静音</string>
+
+    <string name="room_button_two">扬声器</string>
+
+    <string name="room_button_three">关闭摄像头</string>
+
+    <string name="room_button_four">切换摄像头</string>
+
+    <string name="room_prepare">房间等待好友加入</string>
+
+    <string name="network_error">网络无法连接，请检查网络</string>
+
+    <string name="error_101">无效的厂商Key</string>
+
+    <string name="error_confirm">确定</string>
+
+</resources>

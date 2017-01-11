@@ -2,6 +2,7 @@ package com.atguigu.mobileplayer1020.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +14,7 @@ import com.atguigu.mobileplayer1020.activity.SystemVideoPlayerActivity;
 import com.atguigu.mobileplayer1020.adapter.NetVideoAdapter;
 import com.atguigu.mobileplayer1020.base.BaseFragment;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
+import com.atguigu.mobileplayer1020.utils.CacheUtils;
 import com.atguigu.mobileplayer1020.utils.Constant;
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
@@ -113,6 +115,10 @@ public class NetVideoFragment extends BaseFragment {
         super.initData();
         Log.e("TAG","网络视频数据初始化了。。");
 //        tv_no_media.setText("呵呵");
+        String json = CacheUtils.getString(mContext,Constant.NET_URL);
+        if(!TextUtils.isEmpty(json)){
+            processData(json);
+        }
         getDataFromNet();
     }
 
@@ -128,6 +134,8 @@ public class NetVideoFragment extends BaseFragment {
 
                 Log.e("TA","xUtils3联网请求成功==");
                 Log.e("TAG","线程名称=="+Thread.currentThread().getName());
+                CacheUtils.putString(mContext,Constant.NET_URL,result);
+
                 processData(result);
 
                 if(!isLoadMore){

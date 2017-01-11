@@ -1,0 +1,42 @@
+<resources>
+
+    <string name="app_name">AgoraDemo</string>
+    <string name="app_conf">AgoraDemo</string>
+
+    <string name="title_channel">Room %s</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="key_input">Enter Vendor Key</string>
+
+    <string name="room_input">Enter Room No.</string>
+
+    <string name="video_enter">Join Video Call</string>
+
+    <string name="micro_enter">Join Voice Call</string>
+
+    <string name="video_button">Video Call</string>
+
+    <string name="micro_button">Voice Call</string>
+
+    <string name="key_required">Key can not be empty</string>
+
+    <string name="room_required">Room No. can not be empty and must be digits</string>
+
+    <string name="room_button_one">Mute</string>
+
+    <string name="room_button_two">Speaker</string>
+
+    <string name="room_button_three">Camera Off</string>
+
+    <string name="room_button_four">Switch Camera</string>
+
+    <string name="room_prepare">Waiting for attendees</string>
+
+    <string name="network_error">No network connection, please check your network</string>
+
+    <string name="error_101">Invalid vendor key</string>
+
+    <string name="error_confirm">Done</string>
+
+
+</resources>

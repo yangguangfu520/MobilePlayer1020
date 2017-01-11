@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_go_bg"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!--logo-->
+
+            <TextView
+                android:id="@+id/go_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:drawableLeft="@drawable/ic_go_logo"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:text="@string/app_conf" />
+
+            <!--vendor key-->
+
+            <EditText
+                android:id="@+id/input_vendor_key"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:layout_toRightOf="@+id/go_key_image"
+                android:background="@drawable/ic_go_input"
+                android:drawableLeft="@drawable/ic_go_input_cell_key"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:hint="@string/key_input"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:ellipsize="end"
+                android:singleLine="true" />
+
+            <!--room #-->
+
+            <EditText
+                android:id="@+id/input_room_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:inputType="numberDecimal"
+                android:layout_toRightOf="@+id/go_room_image"
+                android:background="@drawable/ic_go_input"
+                android:drawableLeft="@drawable/ic_go_input_cell_computer"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:hint="@string/room_input"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:ellipsize="end"
+                android:singleLine="true" />
+
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:minHeight="80dp"
+                android:gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!--Button for video calling-->
+
+                <RelativeLayout
+                    android:id="@+id/action_video_calling"
+                    android:layout_weight="1.0"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_go_button_blue">
+
+                    <ImageView
+                        android:id="@+id/go_button_video_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/ic_go_button_cell_video"/>
+
+                    <TextView
+                        android:id="@+id/go_button_video_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:textSize="16sp"
+                        android:layout_below="@+id/go_button_video_image"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/video_enter"
+                        android:textColor="@color/white"/>
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="15dp"
+
+                        android:layout_marginLeft="5dp"
+                        android:layout_below="@+id/go_button_video_image"
+                        android:layout_toRightOf="@+id/go_button_video_text"
+                        android:background="@drawable/ic_go_button_cell_arrow"/>
+
+                </RelativeLayout>
+
+
+                <!--Button for voice calling-->
+
+                <RelativeLayout
+                    android:id="@+id/action_voice_calling"
+                    android:layout_weight="1.0"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_go_button_yellow">
+
+                    <ImageView
+                        android:id="@+id/go_button_micro_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/ic_go_button_cell_micro"/>
+
+                    <TextView
+                        android:id="@+id/go_button_micro_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="9dp"
+                        android:textSize="16sp"
+                        android:layout_below="@+id/go_button_micro_image"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/micro_enter"
+                        android:textColor="@color/white"/>
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_below="@+id/go_button_micro_image"
+                        android:layout_toRightOf="@+id/go_button_micro_text"
+                        android:background="@drawable/ic_go_button_cell_arrow"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
