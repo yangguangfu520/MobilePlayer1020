@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.utils.Utils;
+import com.bumptech.glide.Glide;
 
 import org.xutils.common.util.DensityUtil;
 import org.xutils.image.ImageOptions;
-import org.xutils.x;
 
 import java.util.ArrayList;
 
@@ -86,8 +86,22 @@ public class NetVideoAdapter extends BaseAdapter {
         //设置时间
         viewHolder.tv_duration.setText(mediaItem.getDesc());
 
-        //请求图片
-        x.image().bind(viewHolder.iv_icon,mediaItem.getImageUrl(),imageOptions);
+        //s使用xUtils3请求图片
+//        x.image().bind(viewHolder.iv_icon,mediaItem.getImageUrl(),imageOptions);
+        //使用Glide或者Picasso请求图片
+//        Picasso.with(mContext)
+//                .load(mediaItem.getImageUrl())
+//                .placeholder(R.drawable.video_default)
+//                .error(R.drawable.video_default)
+//                .into(viewHolder.iv_icon);
+
+
+        Glide.with(mContext)
+                .load(mediaItem.getImageUrl())
+                .placeholder(R.drawable.video_default)
+                .error(R.drawable.video_default)
+                .into(viewHolder.iv_icon);
+
 
 
         return convertView;

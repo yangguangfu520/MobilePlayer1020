@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.activity.SystemVideoPlayerActivity;
@@ -64,18 +63,30 @@ public class NetVideoFragment extends BaseFragment {
         return view;
     }
 
+    /**
+     * 是否加载更多
+     */
+    private boolean isLoadMore = false;
+
     class MyMaterialRefreshListener extends MaterialRefreshListener {
 
         @Override
         public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
 //            Toast.makeText(mContext, "下拉刷新", Toast.LENGTH_SHORT).show();
+            isLoadMore = false;
             getDataFromNet();
         }
 
+        /**
+         * 加载更多的回调
+         * @param materialRefreshLayout
+         */
         @Override
         public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
             super.onRefreshLoadMore(materialRefreshLayout);
-            Toast.makeText(mContext, "加载更多", Toast.LENGTH_SHORT).show();
+            isLoadMore = true;
+//            Toast.makeText(mContext, "加载更多", Toast.LENGTH_SHORT).show();
+            getDataFromNet();
         }
     }
 
@@ -118,8 +129,15 @@ public class NetVideoFragment extends BaseFragment {
                 Log.e("TA","xUtils3联网请求成功==");
                 Log.e("TAG","线程名称=="+Thread.currentThread().getName());
                 processData(result);
-                //完成刷新
-                refreshLayout.finishRefresh();
+
+                if(!isLoadMore){
+                    //完成刷新
+                    refreshLayout.finishRefresh();
+                }else{
+                    //把上拉的隐藏
+                    refreshLayout.finishRefreshLoadMore();
+                }
+
             }
 
             @Override
@@ -146,19 +164,31 @@ public class NetVideoFragment extends BaseFragment {
      * @param json
      */
     private void processData(String json) {
-        mediaItems = parsedJson(json);
+        if(!isLoadMore){
+            mediaItems = parsedJson(json);
 
-        Log.e("TAG","mediaItems.get(0).getName()=="+mediaItems.get(0).getName());
-        if(mediaItems != null && mediaItems.size() >0){
-            //有数据
-            tv_no_media.setVisibility(View.GONE);
-            adapter = new NetVideoAdapter(mContext,mediaItems);
-            //设置适配器
-            listview.setAdapter(adapter);
+            Log.e("TAG","mediaItems.get(0).getName()=="+mediaItems.get(0).getName());
+            if(mediaItems != null && mediaItems.size() >0){
+                //有数据
+                tv_no_media.setVisibility(View.GONE);
+                adapter = new NetVideoAdapter(mContext,mediaItems);
+                //设置适配器
+                listview.setAdapter(adapter);
 
+            }else{
+                tv_no_media.setVisibility(View.VISIBLE);
+            }
         }else{
-            tv_no_media.setVisibility(View.VISIBLE);
+
+            //加载更多
+            ArrayList<MediaItem> mediaItem  = parsedJson(json);
+            mediaItems.addAll(mediaItem);
+            //刷新适配器
+            adapter.notifyDataSetChanged();//getCount-->getView
+
+
         }
+
     }
 
     /**
