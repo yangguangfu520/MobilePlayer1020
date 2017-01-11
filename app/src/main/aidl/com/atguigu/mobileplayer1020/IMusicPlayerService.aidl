@@ -64,4 +64,9 @@ interface IMusicPlayerService {
                  是否在播放
                 */
                 boolean isPlaying();
+
+                /**
+                 根据传入的位置，播放
+                */
+                void seekTo(int postion);
 }

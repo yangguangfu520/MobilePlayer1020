@@ -1,12 +1,16 @@
 package com.atguigu.mobileplayer1020.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 import com.atguigu.mobileplayer1020.IMusicPlayerService;
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.service.MusicPlayerService;
+import com.atguigu.mobileplayer1020.utils.Utils;
 
 public class SystemAudioPlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -32,6 +37,13 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
     private Button btnAudioNext;
     private Button btnSwichLyric;
     private int position;
+
+    private MyReceiver receiver;
+    /**
+     * 进度更新
+     */
+    private static final int PROGRESS = 1;
+    private Utils utils;
 
 
     /**
@@ -62,6 +74,34 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         btnAudioStartPause.setOnClickListener(this);
         btnAudioNext.setOnClickListener(this);
         btnSwichLyric.setOnClickListener(this);
+
+        //设置拖拽监听
+        seekbarAudio.setOnSeekBarChangeListener(new MyOnSeekBarChangeListener());
+    }
+
+    class MyOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener{
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if(fromUser){
+                try {
+                    service.seekTo(progress);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
     }
 
     @Override
@@ -130,9 +170,37 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         }
     };
 
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case PROGRESS:
+
+                    try {
+                        int currentPosition = service.getCurrentPosition();
+                        tvTime.setText(utils.stringForTime(currentPosition)+"/"+utils.stringForTime(service.getDuration()));
+
+
+                        //SeekBar进度更新
+                        seekbarAudio.setProgress(currentPosition);
+
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+
+                    removeMessages(PROGRESS);
+                    sendEmptyMessageDelayed(PROGRESS,1000);
+
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initData();
         findViews();
         getData();
         //绑定方式启动服务
@@ -141,14 +209,62 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
 
     }
 
+    /**
+     * 接收广播
+     */
+    private void initData() {
+        receiver = new MyReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MusicPlayerService.OPEN_COMPLETE);
+        registerReceiver(receiver,intentFilter);
+
+         utils = new Utils();
+
+    }
+
+    class MyReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(MusicPlayerService.OPEN_COMPLETE.equals(intent.getAction())){
+
+                showViewData();
+            }
+
+        }
+    }
+
+    /**
+     * 显示视图的数据
+     */
+    private void showViewData() {
+        try {
+            tvArtist.setText(service.getArtistName());
+            tvName.setText(service.getAudioName());
+
+            //得到总时长
+            int duration = service.getDuration();
+            seekbarAudio.setMax(duration);
+
+            //更新进度
+            handler.sendEmptyMessage(PROGRESS);
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+
         if(conn != null){
             unbindService(conn);
             conn = null;
         }
-
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 
     private void startAndBindServide() {

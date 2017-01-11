@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
-            android:text="张学友"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 
@@ -34,7 +33,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60dp"
-            android:text="吻别"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 

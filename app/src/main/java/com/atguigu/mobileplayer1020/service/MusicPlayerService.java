@@ -26,6 +26,7 @@ import java.util.ArrayList;
  */
 public class MusicPlayerService extends Service {
 
+    public static final String OPEN_COMPLETE = "open_complete";
     /**
      * AIDL生成的类
      */
@@ -98,6 +99,11 @@ public class MusicPlayerService extends Service {
         @Override
         public boolean isPlaying() throws RemoteException {
             return mediaPlayer.isPlaying();
+        }
+
+        @Override
+        public void seekTo(int postion) throws RemoteException {
+            mediaPlayer.seekTo(postion);
         }
     };
     private ArrayList<MediaItem> mediaItems;
@@ -224,7 +230,7 @@ public class MusicPlayerService extends Service {
 
     }
 
-    class MyOnErrorListener implements MediaPlayer.OnErrorListener{
+    class MyOnErrorListener implements MediaPlayer.OnErrorListener {
 
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -233,7 +239,7 @@ public class MusicPlayerService extends Service {
         }
     }
 
-    class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
+    class MyOnCompletionListener implements MediaPlayer.OnCompletionListener {
 
         @Override
         public void onCompletion(MediaPlayer mp) {
@@ -246,8 +252,17 @@ public class MusicPlayerService extends Service {
 
         @Override
         public void onPrepared(MediaPlayer mp) {
+            notifyChange(OPEN_COMPLETE);
             start();
         }
+    }
+
+    private void notifyChange(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+
+        //发广播
+        sendBroadcast(intent);
     }
 
     /**
@@ -269,6 +284,9 @@ public class MusicPlayerService extends Service {
      * 得到歌曲的名称
      */
     String getAudioName() {
+        if (mediaItem != null) {
+            return mediaItem.getName();
+        }
         return "";
     }
 
@@ -276,13 +294,20 @@ public class MusicPlayerService extends Service {
      * 得到歌曲演唱者的名字
      */
     String getArtistName() {
+        if (mediaItem != null) {
+            return mediaItem.getArtist();
+        }
         return "";
+
     }
 
     /**
      * 得到歌曲的当前播放进度
      */
     int getCurrentPosition() {
+        if (mediaPlayer != null) {
+            return mediaPlayer.getCurrentPosition();
+        }
         return 0;
     }
 
@@ -290,6 +315,9 @@ public class MusicPlayerService extends Service {
      * 得到歌曲的当前总进度
      */
     int getDuration() {
+        if (mediaPlayer != null) {
+            return mediaPlayer.getDuration();
+        }
         return 0;
     }
 
