@@ -12,6 +12,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/iv_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -79,38 +80,38 @@
 
 
             <Button
-                android:layout_weight="1"
                 android:id="@+id/btn_audio_playmode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/btn_audio_playmode_normal_selector" />
 
             <Button
-                android:layout_weight="1"
                 android:id="@+id/btn_audio_pre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/btn_audio_pre_selector" />
 
             <Button
-                android:layout_weight="1"
                 android:id="@+id/btn_audio_start_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/btn_audio_pause_selector" />
 
             <Button
-                android:layout_weight="1"
                 android:id="@+id/btn_audio_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/btn_audio_next_selector" />
 
             <Button
-                android:layout_weight="1"
                 android:id="@+id/btn_swich_lyric"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/btn_swich_lyric_selector" />
 
 

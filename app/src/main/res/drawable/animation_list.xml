@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/now_playing_matrix_01" android:duration="150"/>
+    <item android:drawable="@drawable/now_playing_matrix_02" android:duration="150"/>
+    <item android:drawable="@drawable/now_playing_matrix_03" android:duration="150"/>
+    <item android:drawable="@drawable/now_playing_matrix_04" android:duration="150"/>
+    <item android:drawable="@drawable/now_playing_matrix_05" android:duration="150"/>
+    <item android:drawable="@drawable/now_playing_matrix_06" android:duration="150"/>
+    <item android:drawable="@drawable/now_playing_matrix_07" android:duration="150"/>
+    <item android:drawable="@drawable/now_playing_matrix_08" android:duration="150"/>
+    <item android:drawable="@drawable/now_playing_matrix_09" android:duration="150"/>
+
+</animation-list>
