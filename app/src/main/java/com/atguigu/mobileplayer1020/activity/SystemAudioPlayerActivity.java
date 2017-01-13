@@ -21,8 +21,13 @@ import android.widget.TextView;
 
 import com.atguigu.mobileplayer1020.IMusicPlayerService;
 import com.atguigu.mobileplayer1020.R;
+import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.service.MusicPlayerService;
 import com.atguigu.mobileplayer1020.utils.Utils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class SystemAudioPlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -219,7 +224,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
                 } else {
 
                     //再次显示
-                    showViewData();
+                    showViewData(null);
 
                 }
 
@@ -286,6 +291,9 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
 
         utils = new Utils();
 
+        //1.注册
+        EventBus.getDefault().register(this);
+
     }
 
     class MyReceiver extends BroadcastReceiver {
@@ -295,7 +303,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
 
             if (MusicPlayerService.OPEN_COMPLETE.equals(intent.getAction())) {
 
-                showViewData();
+                showViewData(null);
             }
 
         }
@@ -304,7 +312,8 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
     /**
      * 显示视图的数据
      */
-    private void showViewData() {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showViewData(MediaItem mediaItem) {
         try {
             tvArtist.setText(service.getArtistName());
             tvName.setText(service.getAudioName());
@@ -326,21 +335,28 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
 
     @Override
     protected void onDestroy() {
+        if (receiver != null){
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
 
         if (conn != null) {
             unbindService(conn);
             conn = null;
         }
         handler.removeCallbacksAndMessages(null);
+        //2.取消注册
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
     private void startAndBindServide() {
         Intent intent = new Intent(this, MusicPlayerService.class);
-        //绑定服务
-        bindService(intent, conn, Context.BIND_AUTO_CREATE);
         //启动服务
         startService(intent);//防止服务多次创建
+        //绑定服务
+        bindService(intent, conn, Context.BIND_AUTO_CREATE);
+
     }
 
     private void getData() {

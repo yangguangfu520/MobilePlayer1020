@@ -8,6 +8,7 @@
     tools:context="com.atguigu.mobileplayer1020.activity.SystemAudioPlayerActivity">
 
     <RelativeLayout
+        android:id="@+id/rl_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -40,6 +41,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -116,5 +118,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <com.atguigu.mobileplayer1020.view.LyricShowView
+        android:id="@+id/lyric_show_view"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_bottom"
+        android:layout_below="@id/rl_top"
+        android:layout_width="match_parent"
+        />
 
 </RelativeLayout>

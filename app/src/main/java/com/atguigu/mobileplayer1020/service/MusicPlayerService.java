@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.atguigu.mobileplayer1020.IMusicPlayerService;
@@ -20,6 +21,8 @@ import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.activity.SystemAudioPlayerActivity;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.utils.CacheUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -159,6 +162,7 @@ public class MusicPlayerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.e("TAG","service=="+this.toString());
         playmode = CacheUtils.getPlaymode(this, "playmode");
         getDataFromLocal();
     }
@@ -282,7 +286,9 @@ public class MusicPlayerService extends Service {
 
         @Override
         public void onPrepared(MediaPlayer mp) {
-            notifyChange(OPEN_COMPLETE);
+//            notifyChange(OPEN_COMPLETE);
+            //4.发消息-传递数据
+            EventBus.getDefault().post(mediaItem);
             start();
         }
     }
