@@ -23,12 +23,15 @@ import com.atguigu.mobileplayer1020.IMusicPlayerService;
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.service.MusicPlayerService;
+import com.atguigu.mobileplayer1020.utils.LyricParaser;
 import com.atguigu.mobileplayer1020.utils.Utils;
 import com.atguigu.mobileplayer1020.view.LyricShowView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.File;
 
 public class SystemAudioPlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -345,6 +348,18 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
             handler.sendEmptyMessage(PROGRESS);
 
             checkButtonStatu();
+
+            String path = service.getAudioPath();//mnt/sdcard/audio/beij.mp3
+
+            path = path.substring(0,path.lastIndexOf("."));
+
+            File file = new File(path+".lrc");
+            if(!file.exists()){
+                file = new File(path+".txt");
+            }
+
+            LyricParaser lyricParaser = new LyricParaser();
+            lyricParaser.readFile(file);
 
             //歌词同步
             handler.sendEmptyMessage(SHOW_LYRIC);

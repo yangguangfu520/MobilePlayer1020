@@ -114,6 +114,11 @@ public class MusicPlayerService extends Service {
         public void seekTo(int postion) throws RemoteException {
             mediaPlayer.seekTo(postion);
         }
+
+        @Override
+        public String getAudioPath() throws RemoteException {
+            return mediaItem.getData();
+        }
     };
     private ArrayList<MediaItem> mediaItems;
     /**
