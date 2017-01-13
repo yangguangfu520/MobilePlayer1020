@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.harvic.try_eventbus_1.SecondActivity" >
+
+    <Button 
+        android:id="@+id/btn_first_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="First Event"/>
+    
+    <Button android:id="@+id/btn_second_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Second Event"/>
+    
+    <Button android:id="@+id/btn_third_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Third Event"/>
+
+</LinearLayout>
