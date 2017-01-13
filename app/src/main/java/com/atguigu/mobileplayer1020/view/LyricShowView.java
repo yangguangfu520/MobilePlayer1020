@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.atguigu.mobileplayer1020.bean.LyricBean;
+import com.atguigu.mobileplayer1020.utils.DensityUtil;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
  * 作用：自定义显示歌词的控件
  */
 public class LyricShowView extends TextView {
+    private final Context mContext;
     private int width;
     private int height;
     private ArrayList<LyricBean> lyricBeen;
@@ -27,7 +29,7 @@ public class LyricShowView extends TextView {
      * 歌词的索引
      */
     private int index = 0;
-    private float textHeight = 20;
+    private float textHeight;
     /**
      * 歌曲当前播放的进程
      */
@@ -35,41 +37,44 @@ public class LyricShowView extends TextView {
 
     public LyricShowView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.mContext = context;
+        textHeight = DensityUtil.dip2px(mContext,20);
         initView();
+
 
     }
 
     private void initView() {
         //创建画笔
         paint = new Paint();
-        paint.setTextSize(20);
+        paint.setTextSize(DensityUtil.dip2px(mContext,16));
         paint.setColor(Color.GREEN);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setAntiAlias(true);
 
         nopaint = new Paint();
-        nopaint.setTextSize(20);
+        nopaint.setTextSize(DensityUtil.dip2px(mContext,16));
         nopaint.setColor(Color.WHITE);
         nopaint.setTextAlign(Paint.Align.CENTER);
         nopaint.setAntiAlias(true);
 
 
-        lyricBeen = new ArrayList<>();
-        //添加歌词列表
-        LyricBean lyricBean = new LyricBean();
-        for (int i = 0; i < 1000; i++) {
-            //歌词内容
-            lyricBean.setContent("aaaaaaaaaaa" + i);
-            //休眠时间
-            lyricBean.setSleepTime(i + 1000);
-            //时间戳
-            lyricBean.setTimePoint(i * 1000);
-            //添加到集合中
-            lyricBeen.add(lyricBean);
-            //重新创建
-            lyricBean = new LyricBean();
-
-        }
+//        lyricBeen = new ArrayList<>();
+//        //添加歌词列表
+//        LyricBean lyricBean = new LyricBean();
+//        for (int i = 0; i < 1000; i++) {
+//            //歌词内容
+//            lyricBean.setContent("aaaaaaaaaaa" + i);
+//            //休眠时间
+//            lyricBean.setSleepTime(i + 1000);
+//            //时间戳
+//            lyricBean.setTimePoint(i * 1000);
+//            //添加到集合中
+//            lyricBeen.add(lyricBean);
+//            //重新创建
+//            lyricBean = new LyricBean();
+//
+//        }
     }
 
 
@@ -158,5 +163,13 @@ public class LyricShowView extends TextView {
         }
 
         invalidate();//强制绘制
+    }
+
+    /**
+     * 设置歌词列表
+     * @param lyricBeens
+     */
+    public void setLyrics(ArrayList<LyricBean> lyricBeens) {
+        this.lyricBeen = lyricBeens;
     }
 }

@@ -359,10 +359,16 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
             }
 
             LyricParaser lyricParaser = new LyricParaser();
+            //解析歌词
             lyricParaser.readFile(file);
 
-            //歌词同步
-            handler.sendEmptyMessage(SHOW_LYRIC);
+            if(lyricParaser.isExistsLyric()){
+
+                lyric_show_view.setLyrics(lyricParaser.getLyricBeens());
+                //歌词同步
+                handler.sendEmptyMessage(SHOW_LYRIC);
+
+            }
 
         } catch (RemoteException e) {
             e.printStackTrace();

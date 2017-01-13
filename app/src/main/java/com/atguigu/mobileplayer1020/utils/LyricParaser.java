@@ -5,9 +5,10 @@ import com.atguigu.mobileplayer1020.bean.LyricBean;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * 作者：尚硅谷-杨光福 on 2017/1/13 15:25
@@ -17,12 +18,32 @@ import java.util.ArrayList;
  */
 public class LyricParaser {
     private ArrayList<LyricBean> lyricBeens;
-    public void readFile(File file) throws IOException {
+
+    /*
+     得到歌词列表
+     */
+    public ArrayList<LyricBean> getLyricBeens() {
+        return lyricBeens;
+    }
+
+    /**
+     * 是否歌词存在
+     * @return
+     */
+    public boolean isExistsLyric() {
+        return isExistsLyric;
+    }
+
+    private boolean isExistsLyric = false;
+
+    public void readFile(File file) {
         if (file == null || !file.exists()) {
             //歌词文件不存在
             lyricBeens = null;
+            isExistsLyric = false;
         } else {
             lyricBeens = new ArrayList<>();
+            isExistsLyric = true;
             //歌词文件存在
             //解析歌词-一句一句
             BufferedReader reader = null;
@@ -38,9 +59,35 @@ public class LyricParaser {
             }
 
             //排序
+            Collections.sort(lyricBeens, new MyComparator());
 
 
             //计算每句的高亮时间
+            for (int i = 0; i < lyricBeens.size(); i++) {
+                LyricBean one = lyricBeens.get(i);
+                if (i + 1 < lyricBeens.size()) {
+                    LyricBean two = lyricBeens.get(i + 1);
+                    one.setSleepTime(two.getTimePoint() - one.getTimePoint());
+                }
+            }
+
+
+        }
+    }
+
+    class MyComparator implements Comparator<LyricBean> {
+
+
+        @Override
+        public int compare(LyricBean o1, LyricBean o2) {
+            if (o1.getTimePoint() < o2.getTimePoint()) {
+                return -1;
+            } else if (o1.getTimePoint() > o2.getTimePoint()) {
+                return 1;
+            } else {
+                return 0;
+            }
+
         }
     }
 
@@ -75,31 +122,33 @@ public class LyricParaser {
                     timeStr = content.substring(pos1 + 1, pos2);//03:37.32-->00:59.73
                     timeLongs[i] = stTimeToLong(timeStr);//03:37.32-->毫秒
 
-                    if(timeLongs[i]==-1){
-                        return  "";
+                    if (timeLongs[i] == -1) {
+                        return "";
                     }
 
                     i++;
 
                 }
 
-                //把解析好的时间和歌词对应起来
-                LyricBean lyricBean = new LyricBean();
-                for (int j=0;j<timeLongs.length;j++){
 
-                    if(timeLongs[j] != 0){
-                        //设置歌词内容
-                        lyricBean.setContent(content);
-                        lyricBean.setTimePoint(timeLongs[j]);
-
-                        lyricBeens.add(lyricBean);
-                        lyricBean = new LyricBean();
-                    }
-                }
-
-                return content;
 
             }
+
+            //把解析好的时间和歌词对应起来
+            LyricBean lyricBean = new LyricBean();
+            for (int j = 0; j < timeLongs.length; j++) {
+
+                if (timeLongs[j] != 0) {
+                    //设置歌词内容
+                    lyricBean.setContent(content);
+                    lyricBean.setTimePoint(timeLongs[j]);
+
+                    lyricBeens.add(lyricBean);
+                    lyricBean = new LyricBean();
+                }
+            }
+
+            return content;
 
 
         }
