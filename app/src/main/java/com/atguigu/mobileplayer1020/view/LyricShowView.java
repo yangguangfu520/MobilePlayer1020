@@ -28,6 +28,10 @@ public class LyricShowView extends TextView {
      */
     private int index = 0;
     private float textHeight = 20;
+    /**
+     * 歌曲当前播放的进程
+     */
+    private int currentPosition;
 
     public LyricShowView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -54,8 +58,11 @@ public class LyricShowView extends TextView {
         //添加歌词列表
         LyricBean lyricBean = new LyricBean();
         for (int i = 0; i < 1000; i++) {
+            //歌词内容
             lyricBean.setContent("aaaaaaaaaaa" + i);
+            //休眠时间
             lyricBean.setSleepTime(i + 1000);
+            //时间戳
             lyricBean.setTimePoint(i * 1000);
             //添加到集合中
             lyricBeen.add(lyricBean);
@@ -64,6 +71,8 @@ public class LyricShowView extends TextView {
 
         }
     }
+
+
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -121,5 +130,33 @@ public class LyricShowView extends TextView {
         }
 
 
+    }
+
+    /**
+     * 根据当前播放的位置，计算高亮哪句，并且与歌曲播放同步
+     *
+     * @param currentPosition
+     */
+    public void setNextShowLyric(int currentPosition) {
+        this.currentPosition = currentPosition;
+        if(lyricBeen ==null || lyricBeen.size()==0)
+            return;
+
+        for (int i=1;i<lyricBeen.size();i++){
+
+            if(currentPosition <lyricBeen.get(i).getTimePoint()){
+
+                int indexTemp = i - 1;
+
+                if(currentPosition >= lyricBeen.get(indexTemp).getTimePoint()){
+                    //就我们要找的高亮的哪句
+                    index = indexTemp;
+
+                }
+
+            }
+        }
+
+        invalidate();//强制绘制
     }
 }

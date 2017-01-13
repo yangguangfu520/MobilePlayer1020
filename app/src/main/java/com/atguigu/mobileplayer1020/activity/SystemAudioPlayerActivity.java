@@ -24,12 +24,14 @@ import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.service.MusicPlayerService;
 import com.atguigu.mobileplayer1020.utils.Utils;
+import com.atguigu.mobileplayer1020.view.LyricShowView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class SystemAudioPlayerActivity extends AppCompatActivity implements View.OnClickListener {
+
 
     private ImageView ivIcon;
     private TextView tvArtist;
@@ -42,12 +44,14 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
     private Button btnAudioNext;
     private Button btnSwichLyric;
     private int position;
+    private LyricShowView lyric_show_view;
 
     private MyReceiver receiver;
     /**
      * 进度更新
      */
     private static final int PROGRESS = 1;
+    private static final int SHOW_LYRIC = 2;
     private Utils utils;
     private boolean notification;
 
@@ -70,6 +74,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         btnAudioNext = (Button) findViewById(R.id.btn_audio_next);
         btnSwichLyric = (Button) findViewById(R.id.btn_swich_lyric);
         ivIcon = (ImageView) findViewById(R.id.iv_icon);
+        lyric_show_view = (LyricShowView) findViewById(R.id.lyric_show_view);
 
         ivIcon.setBackgroundResource(R.drawable.animation_list);
         AnimationDrawable drawable = (AnimationDrawable) ivIcon.getBackground();
@@ -246,6 +251,20 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
+                case SHOW_LYRIC://显示歌词
+                    try {
+                        int currentPosition = service.getCurrentPosition();
+
+                        lyric_show_view.setNextShowLyric(currentPosition);
+
+
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    removeMessages(SHOW_LYRIC);
+                    sendEmptyMessage(SHOW_LYRIC);
+
+                    break;
                 case PROGRESS:
 
                     try {
@@ -326,6 +345,9 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
             handler.sendEmptyMessage(PROGRESS);
 
             checkButtonStatu();
+
+            //歌词同步
+            handler.sendEmptyMessage(SHOW_LYRIC);
 
         } catch (RemoteException e) {
             e.printStackTrace();
