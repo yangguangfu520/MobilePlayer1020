@@ -112,6 +112,11 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
             changePlaymode();
         } else if (v == btnAudioPre) {
             // Handle clicks for btnAudioPre
+            try {
+                service.pre();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         } else if (v == btnAudioStartPause) {
             // Handle clicks for btnAudioStartPause
 
@@ -135,6 +140,11 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
 
         } else if (v == btnAudioNext) {
             // Handle clicks for btnAudioNext
+            try {
+                service.next();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         } else if (v == btnSwichLyric) {
             // Handle clicks for btnSwichLyric
         }
