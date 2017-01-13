@@ -19,6 +19,7 @@ import com.atguigu.mobileplayer1020.IMusicPlayerService;
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.activity.SystemAudioPlayerActivity;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
+import com.atguigu.mobileplayer1020.utils.CacheUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,6 +125,25 @@ public class MusicPlayerService extends Service {
     private MediaPlayer mediaPlayer;
 
     /**
+     * 顺序播放
+     */
+    public static final int REPEATE_NOMAL = 1;
+
+    /**
+     * 单曲播放
+     */
+    public static final int REPEATE_SINGLE = 2;
+
+
+    /**
+     * 全部循环
+     */
+    public static final int REPEATE_ALL = 3;
+
+    private int playmode = REPEATE_NOMAL;
+
+
+    /**
      * 返回代理类
      *
      * @param intent
@@ -138,6 +158,7 @@ public class MusicPlayerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        playmode = CacheUtils.getPlaymode(this,"playmode");
         getDataFromLocal();
     }
 
@@ -366,13 +387,15 @@ public class MusicPlayerService extends Service {
      * 得到播放模式
      */
     int getPlayMode() {
-        return 0;
+        return playmode;
     }
 
     /**
      * 设置播放模式
      */
     void setPlayMode(int mode) {
+        this.playmode = mode;
+        CacheUtils.setPlaymode(this,"playmode",playmode);
 
     }
 

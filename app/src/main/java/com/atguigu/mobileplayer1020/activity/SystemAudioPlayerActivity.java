@@ -109,6 +109,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
     public void onClick(View v) {
         if (v == btnAudioPlaymode) {
             // Handle clicks for btnAudioPlaymode
+            changePlaymode();
         } else if (v == btnAudioPre) {
             // Handle clicks for btnAudioPre
         } else if (v == btnAudioStartPause) {
@@ -139,6 +140,50 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         }
     }
 
+    private void changePlaymode() {
+        try {
+            int playmode = service.getPlayMode();
+
+            if (playmode == MusicPlayerService.REPEATE_NOMAL) {
+                playmode = MusicPlayerService.REPEATE_SINGLE;
+            } else if (playmode == MusicPlayerService.REPEATE_SINGLE) {
+                playmode = MusicPlayerService.REPEATE_ALL;
+            } else if (playmode == MusicPlayerService.REPEATE_ALL) {
+                playmode = MusicPlayerService.REPEATE_NOMAL;
+            } else {
+                playmode = MusicPlayerService.REPEATE_NOMAL;
+            }
+            //保存到服务中
+            service.setPlayMode(playmode);
+
+            checkButtonStatu();
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkButtonStatu() {
+        int playmode = 0;
+        try {
+            playmode = service.getPlayMode();
+
+            if (playmode == MusicPlayerService.REPEATE_NOMAL) {
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+            } else if (playmode == MusicPlayerService.REPEATE_SINGLE) {
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_single_selector);
+            } else if (playmode == MusicPlayerService.REPEATE_ALL) {
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_all_selector);
+            } else {
+                btnAudioPlaymode.setBackgroundResource(R.drawable.btn_audio_playmode_normal_selector);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     private IMusicPlayerService service;
 
     private ServiceConnection conn = new ServiceConnection() {
@@ -152,7 +197,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
             service = IMusicPlayerService.Stub.asInterface(iBdinder);
 
             if (service != null) {
-               //从列表进入
+                //从列表进入
                 if (!notification) {
                     try {
                         //开始播放
@@ -260,6 +305,8 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
 
             //更新进度
             handler.sendEmptyMessage(PROGRESS);
+
+            checkButtonStatu();
 
         } catch (RemoteException e) {
             e.printStackTrace();
