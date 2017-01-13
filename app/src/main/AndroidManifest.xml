@@ -263,7 +263,8 @@
             android:name=".activity.VitamioVideoPlayerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/noAnimation_Theme" />
-        <activity android:name=".activity.SystemAudioPlayerActivity"></activity>
+        <activity android:name=".activity.SystemAudioPlayerActivity"
+            android:launchMode="singleTask"></activity>
         <service android:name=".service.MusicPlayerService"></service>
     </application>
 

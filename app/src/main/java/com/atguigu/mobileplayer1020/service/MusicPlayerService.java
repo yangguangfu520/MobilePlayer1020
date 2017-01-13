@@ -1,5 +1,8 @@
 package com.atguigu.mobileplayer1020.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -13,6 +16,8 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.atguigu.mobileplayer1020.IMusicPlayerService;
+import com.atguigu.mobileplayer1020.R;
+import com.atguigu.mobileplayer1020.activity.SystemAudioPlayerActivity;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
 
 import java.io.IOException;
@@ -265,11 +270,31 @@ public class MusicPlayerService extends Service {
         sendBroadcast(intent);
     }
 
+    private NotificationManager nm;
     /**
      * 开始播放音频
      */
     void start() {
         mediaPlayer.start();
+        //在状态栏创建通知
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        Intent intent = new Intent(this, SystemAudioPlayerActivity.class);
+        intent.putExtra("notification",true);//标识来自状态栏
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+        Notification notificaton = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            notificaton = new Notification.Builder(this)
+                    .setSmallIcon(R.drawable.notification_music_playing)
+                    .setContentTitle("321音乐")
+                    .setContentText("正在播放:"+getAudioName())
+                    .setContentIntent(pendingIntent)
+                    .        build();
+
+            //点击后还存在属性
+            notificaton.flags = Notification.FLAG_ONGOING_EVENT;
+        }
+        nm.notify(1,notificaton);
 
     }
 
@@ -278,6 +303,8 @@ public class MusicPlayerService extends Service {
      */
     void pause() {
         mediaPlayer.pause();
+        //移除状态栏的通知
+        nm.cancel(1);
     }
 
     /**

@@ -44,6 +44,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
      */
     private static final int PROGRESS = 1;
     private Utils utils;
+    private boolean notification;
 
 
     /**
@@ -79,11 +80,11 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         seekbarAudio.setOnSeekBarChangeListener(new MyOnSeekBarChangeListener());
     }
 
-    class MyOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener{
+    class MyOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if(fromUser){
+            if (fromUser) {
                 try {
                     service.seekTo(progress);
                 } catch (RemoteException e) {
@@ -114,12 +115,12 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
             // Handle clicks for btnAudioStartPause
 
             try {
-                if(service.isPlaying()){
+                if (service.isPlaying()) {
                     //暂停
                     service.pause();
                     //按钮状态-设置播放
                     btnAudioStartPause.setBackgroundResource(R.drawable.btn_audio_start_selector);
-                }else{
+                } else {
                     //播放
                     service.start();
                     //按钮状态-设置暂停
@@ -151,12 +152,22 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
             service = IMusicPlayerService.Stub.asInterface(iBdinder);
 
             if (service != null) {
-                try {
-                    //开始播放
-                    service.openAudio(position);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+               //从列表进入
+                if (!notification) {
+                    try {
+                        //开始播放
+                        service.openAudio(position);
+
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+
+                    //再次显示
+                    showViewData();
+
                 }
+
             }
         }
 
@@ -170,16 +181,16 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         }
     };
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case PROGRESS:
 
                     try {
                         int currentPosition = service.getCurrentPosition();
-                        tvTime.setText(utils.stringForTime(currentPosition)+"/"+utils.stringForTime(service.getDuration()));
+                        tvTime.setText(utils.stringForTime(currentPosition) + "/" + utils.stringForTime(service.getDuration()));
 
 
                         //SeekBar进度更新
@@ -190,7 +201,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
                     }
 
                     removeMessages(PROGRESS);
-                    sendEmptyMessageDelayed(PROGRESS,1000);
+                    sendEmptyMessageDelayed(PROGRESS, 1000);
 
                     break;
             }
@@ -216,18 +227,18 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         receiver = new MyReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicPlayerService.OPEN_COMPLETE);
-        registerReceiver(receiver,intentFilter);
+        registerReceiver(receiver, intentFilter);
 
-         utils = new Utils();
+        utils = new Utils();
 
     }
 
-    class MyReceiver extends BroadcastReceiver{
+    class MyReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if(MusicPlayerService.OPEN_COMPLETE.equals(intent.getAction())){
+            if (MusicPlayerService.OPEN_COMPLETE.equals(intent.getAction())) {
 
                 showViewData();
             }
@@ -259,7 +270,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
     @Override
     protected void onDestroy() {
 
-        if(conn != null){
+        if (conn != null) {
             unbindService(conn);
             conn = null;
         }
@@ -276,9 +287,16 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
     }
 
     private void getData() {
-        /**
-         * 得到播放位置
-         */
-        position = getIntent().getIntExtra("position", 0);
+        //true:从状态栏进入
+        //false：从ListView中进入
+        notification = getIntent().getBooleanExtra("notification", false);
+
+        if (!notification) {
+            /**
+             * 得到播放位置
+             */
+            position = getIntent().getIntExtra("position", 0);
+        }
+
     }
 }
