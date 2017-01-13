@@ -163,8 +163,12 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         }
     }
 
+    /**
+     * 切换模式
+     */
     private void changePlaymode() {
         try {
+            //得到模式
             int playmode = service.getPlayMode();
 
             if (playmode == MusicPlayerService.REPEATE_NOMAL) {
@@ -179,6 +183,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
             //保存到服务中
             service.setPlayMode(playmode);
 
+            //校验按钮状态
             checkButtonStatu();
 
         } catch (RemoteException e) {
