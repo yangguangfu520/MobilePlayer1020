@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-
     <application
         android:name=".app.MyApplication"
         android:allowBackup="true"
@@ -265,9 +264,13 @@
             android:name=".activity.VitamioVideoPlayerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/noAnimation_Theme" />
-        <activity android:name=".activity.SystemAudioPlayerActivity"
-            android:launchMode="singleTask"></activity>
-        <service android:name=".service.MusicPlayerService"></service>
+        <activity
+            android:name=".activity.SystemAudioPlayerActivity"
+            android:launchMode="singleTask" />
+
+        <service android:name=".service.MusicPlayerService" />
+
+        <activity android:name=".activity.SearchActivity"></activity>
     </application>
 
 </manifest>
