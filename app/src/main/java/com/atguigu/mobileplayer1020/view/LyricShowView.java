@@ -34,6 +34,8 @@ public class LyricShowView extends TextView {
      * 歌曲当前播放的进程
      */
     private int currentPosition;
+    private float sleepTime;
+    private float timePoint;
 
     public LyricShowView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -96,6 +98,26 @@ public class LyricShowView extends TextView {
         super.onDraw(canvas);
 
         if (lyricBeen != null && lyricBeen.size() > 0) {
+
+
+
+
+            if(index != lyricBeen.size()-1){
+                float plush = 0;
+
+                if(sleepTime==0){
+                    plush = 0;
+                }else{
+                    // 这一句花的时间： 这一句休眠时间  =  这一句要移动的距离：总距离(行高)
+                    //这一句要移动的距离 = （这一句花的时间/这一句休眠时间） * 总距离(行高)
+                    plush = ((currentPosition-timePoint)/sleepTime)*textHeight;
+                }
+
+
+                canvas.translate(0,-plush);
+
+            }
+
             //绘制歌词
             //当前句-绿色
             String content = lyricBeen.get(index).getContent();
@@ -155,10 +177,14 @@ public class LyricShowView extends TextView {
 
                 if(currentPosition >= lyricBeen.get(indexTemp).getTimePoint()){
                     //就我们要找的高亮的哪句
-                    index = indexTemp;
+                    index = indexTemp;//某一句歌词的索引
+                    sleepTime = lyricBeen.get(indexTemp).getSleepTime();
+                    timePoint = lyricBeen.get(indexTemp).getTimePoint();
 
                 }
 
+            }else{
+                index = i;
             }
         }
 
