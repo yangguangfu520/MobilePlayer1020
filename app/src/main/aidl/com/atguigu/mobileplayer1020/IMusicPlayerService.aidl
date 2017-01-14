@@ -71,4 +71,6 @@ interface IMusicPlayerService {
                 void seekTo(int postion);
 
                 String getAudioPath();
+
+                int getAudioSessionId();
 }

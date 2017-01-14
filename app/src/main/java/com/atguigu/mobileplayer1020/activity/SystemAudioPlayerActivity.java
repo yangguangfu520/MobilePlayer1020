@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -25,6 +26,7 @@ import com.atguigu.mobileplayer1020.bean.MediaItem;
 import com.atguigu.mobileplayer1020.service.MusicPlayerService;
 import com.atguigu.mobileplayer1020.utils.LyricParaser;
 import com.atguigu.mobileplayer1020.utils.Utils;
+import com.atguigu.mobileplayer1020.view.BaseVisualizerView;
 import com.atguigu.mobileplayer1020.view.LyricShowView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,6 +50,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
     private Button btnSwichLyric;
     private int position;
     private LyricShowView lyric_show_view;
+    private BaseVisualizerView baseVisualizerView;
 
     private MyReceiver receiver;
     /**
@@ -57,6 +60,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
     private static final int SHOW_LYRIC = 2;
     private Utils utils;
     private boolean notification;
+    private Visualizer mVisualizer;
 
 
     /**
@@ -78,6 +82,7 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
         btnSwichLyric = (Button) findViewById(R.id.btn_swich_lyric);
         ivIcon = (ImageView) findViewById(R.id.iv_icon);
         lyric_show_view = (LyricShowView) findViewById(R.id.lyric_show_view);
+        baseVisualizerView = (BaseVisualizerView) findViewById(R.id.baseVisualizerView);
 
         ivIcon.setBackgroundResource(R.drawable.animation_list);
         AnimationDrawable drawable = (AnimationDrawable) ivIcon.getBackground();
@@ -341,6 +346,8 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void showViewData(MediaItem mediaItem) {
+
+        setupVisualizerFxAndUi();
         try {
             tvArtist.setText(service.getArtistName());
             tvName.setText(service.getAudioName());
@@ -356,18 +363,18 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
 
             String path = service.getAudioPath();//mnt/sdcard/audio/beij.mp3
 
-            path = path.substring(0,path.lastIndexOf("."));
+            path = path.substring(0, path.lastIndexOf("."));
 
-            File file = new File(path+".lrc");
-            if(!file.exists()){
-                file = new File(path+".txt");
+            File file = new File(path + ".lrc");
+            if (!file.exists()) {
+                file = new File(path + ".txt");
             }
 
             LyricParaser lyricParaser = new LyricParaser();
             //解析歌词
             lyricParaser.readFile(file);
 
-            if(lyricParaser.isExistsLyric()){
+            if (lyricParaser.isExistsLyric()) {
 
                 lyric_show_view.setLyrics(lyricParaser.getLyricBeens());
                 //歌词同步
@@ -381,9 +388,38 @@ public class SystemAudioPlayerActivity extends AppCompatActivity implements View
 
     }
 
+
+    /**
+     * 生成一个VisualizerView对象，使音频频谱的波段能够反映到 VisualizerView上
+     */
+    private void setupVisualizerFxAndUi() {
+
+        int audioSessionid = 0;
+        try {
+            audioSessionid = service.getAudioSessionId();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        System.out.println("audioSessionid==" + audioSessionid);
+        mVisualizer = new Visualizer(audioSessionid);
+        // 参数内必须是2的位数
+        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        // 设置允许波形表示，并且捕获它
+        baseVisualizerView.setVisualizer(mVisualizer);
+        mVisualizer.setEnabled(true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isFinishing()) {
+            mVisualizer.release();
+        }
+    }
+
     @Override
     protected void onDestroy() {
-        if (receiver != null){
+        if (receiver != null) {
             unregisterReceiver(receiver);
             receiver = null;
         }

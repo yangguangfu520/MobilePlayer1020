@@ -12,7 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <com.atguigu.mobileplayer1020.view.BaseVisualizerView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/baseVisualizerView"
+            android:layout_height="40dp"
+            android:layout_width="80dp"
+            />
+
         <ImageView
+            android:visibility="gone"
             android:id="@+id/iv_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
