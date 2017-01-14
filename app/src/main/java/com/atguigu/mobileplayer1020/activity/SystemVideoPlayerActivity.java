@@ -13,12 +13,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -127,6 +129,10 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
      * 是否网络视频
      */
     private boolean isNetUrl;
+    /**
+     * 震动
+     */
+    private Vibrator vibrator;
 
     /**
      * Find the Views in the layout<br />
@@ -961,6 +967,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
      * 当按下的时候的音量
      */
     private int mVol;
+    private float startX;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -970,6 +977,7 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
             //1.按下
             //按下的时候记录起始坐标，最大的滑动区域（屏幕的高），当前的音量
             startY = event.getY();
+            startX = event.getX();
             touchRang = Math.min(screeHeight, screenWidth);//screeHeight
             mVol = am.getStreamVolume(AudioManager.STREAM_MUSIC);
             //把消息移除
@@ -978,25 +986,72 @@ public class SystemVideoPlayerActivity extends Activity implements View.OnClickL
 
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             float endY = event.getY();
-            //屏幕滑动的距离
             float distanceY = startY - endY;
-            //滑动屏幕的距离 ： 总距离  = 改变的声音 ： 总声音
+            if(startX > screenWidth/2){
+                //屏幕滑动的距离
 
-            //改变的声音 = （滑动屏幕的距离 / 总距离)*总声音
-            float delta = (distanceY / touchRang) * maxVolume;
-            // 设置的声音  = 原来记录的 + 改变的声音
-            int volue = (int) Math.min(Math.max(mVol + delta, 0), maxVolume);
-            //判断
-            if (delta != 0) {
-                updateVoiceProgress(volue);
-            }
+                //滑动屏幕的距离 ： 总距离  = 改变的声音 ： 总声音
+
+                //改变的声音 = （滑动屏幕的距离 / 总距离)*总声音
+                float delta = (distanceY / touchRang) * maxVolume;
+                // 设置的声音  = 原来记录的 + 改变的声音
+                int volue = (int) Math.min(Math.max(mVol + delta, 0), maxVolume);
+                //判断
+                if (delta != 0) {
+                    updateVoiceProgress(volue);
+                }
 
 //            startY = event.getY();//不能添加
+            }else{
+
+                //左边屏幕--改变亮度
+                final double FLING_MIN_DISTANCE = 0.5;
+                final double FLING_MIN_VELOCITY = 0.5;
+                if (startY- endY > FLING_MIN_DISTANCE
+                        && Math.abs(distanceY) > FLING_MIN_VELOCITY) {
+                    Log.e(TAG, "up");
+                    setBrightness(20);
+                }
+                if (startY - endY < FLING_MIN_DISTANCE
+                        && Math.abs(distanceY) > FLING_MIN_VELOCITY) {
+                    Log.e(TAG, "down");
+                    setBrightness(-20);
+                }
+
+
+            }
+
+
 
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             handler.sendEmptyMessageDelayed(HIDE_MEDIA_CONTROLLER, 4000);
         }
         return true;
+    }
+
+    /*
+     *
+     * 设置屏幕亮度 lp = 0 全暗 ，lp= -1,根据系统设置， lp = 1; 最亮
+     */
+    public void setBrightness(float brightness) {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        // if (lp.screenBrightness <= 0.1) {
+        // return;
+        // }
+        lp.screenBrightness = lp.screenBrightness + brightness / 255.0f;
+        if (lp.screenBrightness > 1) {
+            lp.screenBrightness = 1;
+            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            long[] pattern = { 10, 200 }; // OFF/ON/OFF/ON...
+            vibrator.vibrate(pattern, -1);
+        } else if (lp.screenBrightness < 0.2) {
+            lp.screenBrightness = (float) 0.2;
+            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            long[] pattern = { 10, 200 }; // OFF/ON/OFF/ON...
+            vibrator.vibrate(pattern, -1);
+        }
+        Log.e(TAG, "lp.screenBrightness= " + lp.screenBrightness);
+        getWindow().setAttributes(lp);
     }
 
     /**

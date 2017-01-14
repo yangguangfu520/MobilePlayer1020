@@ -37,6 +37,8 @@
     <!--定位信息是敏感信息， 可通过Setting.setLocationEnable(false)关闭定位请求 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+
 
     <application
         android:name=".app.MyApplication"
