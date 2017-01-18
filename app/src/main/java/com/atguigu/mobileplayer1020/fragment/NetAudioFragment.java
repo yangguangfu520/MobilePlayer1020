@@ -1,12 +1,15 @@
 package com.atguigu.mobileplayer1020.fragment;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.atguigu.mobileplayer1020.R;
+import com.atguigu.mobileplayer1020.activity.PicassoSampleActivity;
 import com.atguigu.mobileplayer1020.adapter.NetAudioFragmentAdapter;
 import com.atguigu.mobileplayer1020.base.BaseFragment;
 import com.atguigu.mobileplayer1020.bean.NetAudioBean;
@@ -47,6 +50,32 @@ public class NetAudioFragment extends BaseFragment {
         Log.e("TAG", "网络音频ui初始化了。。");
         View view = View.inflate(mContext, R.layout.fragment_net_audio, null);
         ButterKnife.inject(this, view);
+        //设置ListView的item的点击事件
+        //设置点击事件
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                NetAudioBean.ListBean listEntity = listDatas.get(position);
+                if(listEntity !=null ){
+                    //3.传递视频列表
+                    Intent intent = new Intent(mContext,PicassoSampleActivity.class);
+                    if(listEntity.getType().equals("gif")){
+                        String url = listEntity.getGif().getImages().get(0);
+                        intent.putExtra("url",url);
+                        mContext.startActivity(intent);
+                    }else if(listEntity.getType().equals("image")){
+                        String url = listEntity.getImage().getThumbnail_small().get(0);
+                        intent.putExtra("url",url);
+                        mContext.startActivity(intent);
+                    }
+                }
+
+
+            }
+        });
+
         return view;
     }
 
