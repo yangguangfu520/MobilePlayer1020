@@ -99,5 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        recyclerview.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
 
 
+        //设置分割线
+        recyclerview.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
     }
 }
