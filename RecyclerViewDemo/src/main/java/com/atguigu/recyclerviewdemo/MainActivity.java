@@ -2,8 +2,10 @@ package com.atguigu.recyclerviewdemo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Button;
 
@@ -56,10 +58,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // Handle clicks for btnDelete
         } else if (v == btnList) {
             // Handle clicks for btnList
+            recyclerview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         } else if (v == btnGrid) {
             // Handle clicks for btnGrid
+            recyclerview.setLayoutManager(new GridLayoutManager(this,3,GridLayoutManager.VERTICAL,false));
         } else if (v == btnFlow) {
             // Handle clicks for btnFlow
+            recyclerview.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
         }
     }
 
@@ -85,7 +90,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerview.setAdapter(adapter);
 
         //布局管理器
-        recyclerview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+        //List 第一个参数：上下文；第二个参数：方向；第三个参数：是否倒序
+        recyclerview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        //Grid
+
+//        recyclerview.setLayoutManager(new GridLayoutManager(this,3,GridLayoutManager.VERTICAL,false));
+        //瀑布流
+//        recyclerview.setLayoutManager(new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL));
 
 
     }
