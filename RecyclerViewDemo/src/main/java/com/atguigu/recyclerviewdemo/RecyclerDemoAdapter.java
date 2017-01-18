@@ -93,6 +93,37 @@ public class RecyclerDemoAdapter extends RecyclerView.Adapter<RecyclerDemoAdapte
             super(itemView);
             iv_icon = (ImageView) itemView.findViewById(R.id.iv_icon);
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            //设置item的点击事件
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //getLayoutPosition 把你点击的View的对应的位置
+//                    Toast.makeText(mContext, "data=="+datas.get(getLayoutPosition()), Toast.LENGTH_SHORT).show();
+                    if(listener != null){
+                        listener.onItemClick(getLayoutPosition());
+                    }
+                }
+            });
         }
+    }
+
+    /**
+     * item点击的监听器
+     */
+    public interface OnItemClickListener{
+        /**
+         * 单点击item的时候回调
+         * @param postion
+         */
+        public void  onItemClick(int postion);
+    }
+
+    private OnItemClickListener listener;
+
+    /*
+    设置item的点击监听
+     */
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 }

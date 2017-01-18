@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -109,6 +110,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //设置item的动画
         recyclerview.setItemAnimator(new DefaultItemAnimator());
+
+        //设置item的点击事件
+        adapter.setOnItemClickListener(new RecyclerDemoAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int postion) {
+                Toast.makeText(MainActivity.this, ""+datas.get(postion), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 }
