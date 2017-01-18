@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.atguigu.mobileplayer1020.R;
+import com.atguigu.mobileplayer1020.adapter.NetAudioFragmentAdapter;
 import com.atguigu.mobileplayer1020.base.BaseFragment;
 import com.atguigu.mobileplayer1020.bean.NetAudioBean;
 import com.atguigu.mobileplayer1020.utils.Constant;
@@ -39,6 +40,7 @@ public class NetAudioFragment extends BaseFragment {
      * 数据集合
      */
     private List<NetAudioBean.ListBean> listDatas;
+    private NetAudioFragmentAdapter myAdapter;
 
     @Override
     public View initView() {
@@ -52,8 +54,9 @@ public class NetAudioFragment extends BaseFragment {
     public void initData() {
         super.initData();
         Log.e("TAG", "网络音频数据初始化了。。");
-        tvNomedia.setVisibility(View.VISIBLE);
-        tvNomedia.setText("hh");
+//        tvNomedia.setVisibility(View.VISIBLE);
+//        tvNomedia.setText("hh");
+        getDataFromNet();
     }
 
 
@@ -61,7 +64,7 @@ public class NetAudioFragment extends BaseFragment {
     public void onRefrshData() {
         super.onRefrshData();
 //        Log.e("TAG","onHiddenChanged。。"+this.toString());
-        getDataFromNet();
+
     }
 
     private void getDataFromNet() {
@@ -97,6 +100,18 @@ public class NetAudioFragment extends BaseFragment {
 
 
         Log.e("TAG","解决成功=="+listDatas.get(0).getText());
+        if(listDatas != null && listDatas.size() >0){
+            //有视频
+            tvNomedia.setVisibility(View.GONE);
+            //设置适配器
+            myAdapter = new NetAudioFragmentAdapter(mContext,listDatas);
+            listview.setAdapter(myAdapter);
+        }else{
+            //没有视频
+            tvNomedia.setVisibility(View.VISIBLE);
+        }
+
+        progressbar.setVisibility(View.GONE);
 
     }
 

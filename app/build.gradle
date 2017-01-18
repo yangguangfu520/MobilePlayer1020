@@ -38,4 +38,6 @@ dependencies {
     compile files('libs/Msc.jar')
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.jakewharton:butterknife:5.1.1'
+    //    compile 'fm.jiecao:jiecaovideoplayer:5.3'
+    compile project(':jcvideoplayer-lib')
 }

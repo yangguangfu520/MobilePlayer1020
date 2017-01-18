@@ -3,16 +3,15 @@ package com.atguigu.mobileplayer1020;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.atguigu.mobileplayer1020.base.BaseFragment;
 import com.atguigu.mobileplayer1020.fragment.LocalAudioFragment;
@@ -21,6 +20,8 @@ import com.atguigu.mobileplayer1020.fragment.NetAudioFragment;
 import com.atguigu.mobileplayer1020.fragment.NetVideoFragment;
 
 import java.util.ArrayList;
+
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +37,11 @@ public class MainActivity extends AppCompatActivity {
      * 缓存的Fragment
      */
     private Fragment tempFragment;
+    /**
+     *
+     */
+    private SensorManager sensorManager;
+    private JCVideoPlayer.JCAutoFullscreenListener sensorEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
         //设置RadioGroup的监听
         initListenter();
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorEventListener = new JCVideoPlayer.JCAutoFullscreenListener();
 
     }
 
@@ -168,27 +177,53 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private boolean isExit = false;
+//    private boolean isExit = false;
+//
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if(keyCode ==KeyEvent.KEYCODE_BACK){
+//            if(position !=0){
+//                //选中首页
+//                rg_main.check(R.id.rb_local_video);
+//                return true;
+//            }else if(!isExit){
+//                isExit = true;
+//                Toast.makeText(this, "再按一次推出", Toast.LENGTH_SHORT).show();
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        isExit = false;
+//                    }
+//                }, 2000);
+//                return true;
+//            }
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode ==KeyEvent.KEYCODE_BACK){
-            if(position !=0){
-                //选中首页
-                rg_main.check(R.id.rb_local_video);
-                return true;
-            }else if(!isExit){
-                isExit = true;
-                Toast.makeText(this, "再按一次推出", Toast.LENGTH_SHORT).show();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        isExit = false;
-                    }
-                }, 2000);
-                return true;
-            }
+    protected void onResume() {
+        super.onResume();
+        //监听传感器
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(sensorEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //取消注册
+        sensorManager.unregisterListener(sensorEventListener);
+        JCVideoPlayer.releaseAllVideos();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (JCVideoPlayer.backPress()) {
+            return;
         }
-        return super.onKeyDown(keyCode, event);
+        super.onBackPressed();
     }
 }
