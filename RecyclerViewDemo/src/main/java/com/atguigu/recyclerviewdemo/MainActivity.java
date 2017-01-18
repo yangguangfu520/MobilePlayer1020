@@ -2,6 +2,7 @@ package com.atguigu.recyclerviewdemo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,8 +55,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v == btnAdd) {
             // Handle clicks for btnAdd
+            adapter.addData(0,"new Data");
+            recyclerview.scrollToPosition(0);
         } else if (v == btnDelete) {
             // Handle clicks for btnDelete
+            adapter.removewData(2);
+            recyclerview.scrollToPosition(2);
         } else if (v == btnList) {
             // Handle clicks for btnList
             recyclerview.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
@@ -101,5 +106,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //设置分割线
         recyclerview.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
+
+        //设置item的动画
+        recyclerview.setItemAnimator(new DefaultItemAnimator());
+
     }
 }

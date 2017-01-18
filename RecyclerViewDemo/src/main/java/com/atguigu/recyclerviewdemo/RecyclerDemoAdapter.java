@@ -62,6 +62,26 @@ public class RecyclerDemoAdapter extends RecyclerView.Adapter<RecyclerDemoAdapte
 
 
 
+
+    /**
+     * 添加数据
+     * @param data
+     */
+    public void addData(int position,String data) {
+        datas.add(position,data);
+        //刷新数据
+        notifyItemInserted(position);
+    }
+
+    /*
+    删除数据
+     */
+    public void removewData(int positon) {
+        datas.remove(positon);
+        notifyItemRemoved(positon);
+    }
+
+
     /**
      * ViewHolder
      */
