@@ -34,6 +34,8 @@ public class RecyclerDemoAdapter extends RecyclerView.Adapter<RecyclerDemoAdapte
         return datas.size();
     }
 
+
+
     /**
      * 创建ViewHolder
      * @param parent

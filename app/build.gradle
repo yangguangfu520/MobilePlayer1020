@@ -41,4 +41,5 @@ dependencies {
     //    compile 'fm.jiecao:jiecaovideoplayer:5.3'
     compile project(':jcvideoplayer-lib')
     compile project(':PhotoView_library')
+    compile 'com.android.support:recyclerview-v7:24.2.1'
 }

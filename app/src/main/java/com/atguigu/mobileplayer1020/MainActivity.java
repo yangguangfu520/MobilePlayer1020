@@ -18,6 +18,7 @@ import com.atguigu.mobileplayer1020.fragment.LocalAudioFragment;
 import com.atguigu.mobileplayer1020.fragment.LocalVideoFragment;
 import com.atguigu.mobileplayer1020.fragment.NetAudioFragment;
 import com.atguigu.mobileplayer1020.fragment.NetVideoFragment;
+import com.atguigu.mobileplayer1020.fragment.RecyclerViewFragment;
 
 import java.util.ArrayList;
 
@@ -80,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.rb_net_video:
                         position = 3;
+                        break;
+                    case R.id.rb_recyclerview:
+                        position = 4;
                         break;
                 }
 
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(new LocalAudioFragment());//本地音乐
         fragments.add(new NetAudioFragment());//网络音乐
         fragments.add(new NetVideoFragment());//网络视频
+        fragments.add(new RecyclerViewFragment());//RecyclerView
 
     }
 

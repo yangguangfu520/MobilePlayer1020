@@ -20,7 +20,7 @@
         <TextView
             android:id="@+id/tv_video_kind_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="分类，例如：搞笑"
             android:textColor="#77000000"
@@ -73,7 +73,7 @@
         <LinearLayout
             android:id="@+id/ll_cai"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
             android:gravity="center"
