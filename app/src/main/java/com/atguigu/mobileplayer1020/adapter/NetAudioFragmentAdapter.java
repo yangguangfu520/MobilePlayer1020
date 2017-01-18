@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -75,7 +76,7 @@ public class NetAudioFragmentAdapter extends BaseAdapter {
     }
 
     /*
-    根据位置得到当前Item的类型
+    根据位置得到当前Item的类型--系统提供
      */
     @Override
     public int getItemViewType(int position) {
@@ -96,7 +97,7 @@ public class NetAudioFragmentAdapter extends BaseAdapter {
     }
 
     /**
-     * 得到类型总数
+     * 得到类型总数 --系统
      * @return
      */
     @Override
@@ -116,11 +117,21 @@ public class NetAudioFragmentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        int itemViewType = getItemViewType(position);//更加得到不同类型
-        convertView = initView(convertView, itemViewType, listDatas.get(position));
+        //根据位置得到不同类型
+        int itemViewType = getItemViewType(position);
+        //取出不同的数据
+        NetAudioBean.ListBean listBean =  listDatas.get(position);
+        convertView = initView(convertView, itemViewType, listBean);
         return convertView;
     }
 
+    /**
+     *
+     * @param convertView 缓存的视图
+     * @param itemViewType 类型
+     * @param mediaItem 数据
+     * @return
+     */
     private View initView(View convertView, int itemViewType, NetAudioBean.ListBean mediaItem) {
         switch (itemViewType) {
             case TYPE_VIDEO://视频
@@ -396,9 +407,17 @@ public class NetAudioFragmentAdapter extends BaseAdapter {
     }
 
 
-    private class ADHolder {
-        public ADHolder(View convertView) {
+    static class ADHolder {
+        TextView tvContext;
+        ImageView ivImageIcon;
+        Button btnInstall;
 
+        ADHolder(View convertView) {
+            //中间公共部分 -所有的都有
+            tvContext = (TextView) convertView.findViewById(R.id.tv_context);
+            btnInstall = (Button) convertView.findViewById(R.id.btn_install);
+            ivImageIcon = (ImageView) convertView.findViewById(R.id.iv_image_icon);
         }
     }
+
 }
