@@ -223,7 +223,7 @@ public class NetVideoFragment extends BaseFragment {
                 String desc = jsonObjectItem.optString("videoTitle");
                 mediaItem.setDesc(desc);
                 String url = jsonObjectItem.optString("url");
-                mediaItem.setData(url);
+                mediaItem.setData(Constant.BASE_URL+url);
                 String hightUrl = jsonObjectItem.optString("hightUrl");
                 mediaItem.setHeightUrl(hightUrl);
                 String coverImg = jsonObjectItem.optString("coverImg");

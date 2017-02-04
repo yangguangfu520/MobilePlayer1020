@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.bean.MediaItem;
+import com.atguigu.mobileplayer1020.utils.Constant;
 import com.atguigu.mobileplayer1020.utils.Utils;
 import com.bumptech.glide.Glide;
 
@@ -97,7 +98,7 @@ public class NetVideoAdapter extends BaseAdapter {
 
 
         Glide.with(mContext)
-                .load(mediaItem.getImageUrl())
+                .load(Constant.BASE_URL+mediaItem.getImageUrl())
                 .placeholder(R.drawable.video_default)
                 .error(R.drawable.video_default)
                 .into(viewHolder.iv_icon);

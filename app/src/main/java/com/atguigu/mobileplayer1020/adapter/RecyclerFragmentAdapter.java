@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.atguigu.mobileplayer1020.R;
 import com.atguigu.mobileplayer1020.activity.PicassoSampleActivity;
 import com.atguigu.mobileplayer1020.bean.NetAudioBean;
+import com.atguigu.mobileplayer1020.utils.Constant;
 import com.atguigu.mobileplayer1020.utils.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -181,11 +182,11 @@ public class RecyclerFragmentAdapter extends RecyclerView.Adapter {
                         //3.传递视频列表
                         Intent intent = new Intent(mContext,PicassoSampleActivity.class);
                         if(listEntity.getType().equals("gif")){
-                            String url = listEntity.getGif().getImages().get(0);
+                            String url = Constant.BASE_URL+listEntity.getGif().getImages().get(0);
                             intent.putExtra("url",url);
                             mContext.startActivity(intent);
                         }else if(listEntity.getType().equals("image")){
-                            String url = listEntity.getImage().getThumbnail_small().get(0);
+                            String url = Constant.BASE_URL+listEntity.getImage().getThumbnail_small().get(0);
                             intent.putExtra("url",url);
                             mContext.startActivity(intent);
                         }
@@ -202,7 +203,7 @@ public class RecyclerFragmentAdapter extends RecyclerView.Adapter {
         public void setData(NetAudioBean.ListBean mediaItem) {
             //设置头像
             if (mediaItem.getU() != null && mediaItem.getU().getHeader() != null && mediaItem.getU().getHeader().get(0) != null) {
-                x.image().bind(ivHeadpic, mediaItem.getU().getHeader().get(0));
+                x.image().bind(ivHeadpic, Constant.BASE_URL+mediaItem.getU().getHeader().get(0));
             }
             //设置文本
             if (mediaItem.getU() != null && mediaItem.getU().getName() != null) {
@@ -260,12 +261,12 @@ public class RecyclerFragmentAdapter extends RecyclerView.Adapter {
 
             //视频特有的------------------------
             //第一个参数是视频播放地址，第二个参数是显示封面的地址，第三参数是标题
-            boolean setUp = jcvVideoplayer.setUp( mediaItem.getVideo().getVideo().get(0), JCVideoPlayer.SCREEN_LAYOUT_LIST,
+            boolean setUp = jcvVideoplayer.setUp(Constant.BASE_URL+ mediaItem.getVideo().getVideo().get(0), JCVideoPlayer.SCREEN_LAYOUT_LIST,
                     "");
             //加载图片
             if (setUp) {
                 //设置默认封面
-                Glide.with(mContext).load(mediaItem.getVideo().getThumbnail().get(0)).into(jcvVideoplayer.thumbImageView);
+                Glide.with(mContext).load(Constant.BASE_URL+mediaItem.getVideo().getThumbnail().get(0)).into(jcvVideoplayer.thumbImageView);
             }
             tvPlayNums.setText(mediaItem.getVideo().getPlaycount() + "次播放");
             tvVideoDuration.setText(utils.stringForTime(mediaItem.getVideo().getDuration() * 1000) + "");
@@ -296,7 +297,7 @@ public class RecyclerFragmentAdapter extends RecyclerView.Adapter {
 
             ivImageIcon.setImageResource(R.drawable.bg_item);
             if (mediaItem.getImage() != null && mediaItem.getImage() != null && mediaItem.getImage().getThumbnail_small() != null) {
-                Glide.with(mContext).load(mediaItem.getImage().getThumbnail_small().get(0)).
+                Glide.with(mContext).load(Constant.BASE_URL+mediaItem.getImage().getThumbnail_small().get(0)).
                         placeholder(R.drawable.bg_item).
                         error(R.drawable.bg_item).
                         diskCacheStrategy(DiskCacheStrategy.ALL).
@@ -358,7 +359,7 @@ public class RecyclerFragmentAdapter extends RecyclerView.Adapter {
 
             //下面是gif
             if (mediaItem.getGif() != null && mediaItem.getGif() != null && mediaItem.getGif().getImages() != null) {
-                Glide.with(mContext).load(mediaItem.getGif().getImages().get(0)).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(ivImageGif);
+                Glide.with(mContext).load(Constant.BASE_URL+mediaItem.getGif().getImages().get(0)).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(ivImageGif);
 //                x.image().bind(ivImageGif, mediaItem.getGif().getImages().get(0), imageOptions);
             }
 
